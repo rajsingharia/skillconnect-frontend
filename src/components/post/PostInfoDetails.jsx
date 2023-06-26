@@ -118,16 +118,16 @@ export default function PostInfoDetails({ isLoading, error, post }) {
                             <div className='mb-2'>
                                 <p className="card-subtitle"
                                     style={{ 'color': 'grey', 'fontWeight': '400' }}>
-                                    <b style={{ 'color': 'black' }}>Posted On: </b>
-                                    ● {TimeStampToDate(post?.createdOn)}
+                                    <b style={{ 'color': 'black' }}>● Posted On: </b>
+                                    {TimeStampToDate(post?.createdOn)}
                                 </p>
                             </div>
 
                             <div className='mb-4'>
                                 <p className="card-subtitle"
                                     style={{ 'color': 'grey', 'fontWeight': '400' }}>
-                                    <b style={{ 'color': 'black' }}>Urgency Level: </b>
-                                    ● {findUrgencyLevel(post?.urgencyLevel)}
+                                    <b style={{ 'color': 'black' }}>● Urgency Level: </b>
+                                    {findUrgencyLevel(post?.urgencyLevel)}
                                 </p>
                             </div>
 

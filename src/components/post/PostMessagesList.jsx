@@ -7,6 +7,7 @@ import { TimeStampToDate } from '../../utils/Helper';
 import SendIcon from '@mui/icons-material/Send';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import UserDetailsDialog from '../UserDetailDialog/UserDetailsDialog';
+import './PostMessagesList.css'
 
 export default function PostMessagesList({ postId }) {
 
@@ -35,8 +36,15 @@ export default function PostMessagesList({ postId }) {
 
             api.get(`api/v1/message/${postId}`)
                 .then(function (response) {
-                    console.log(response);
-                    setMessageList(response.data);
+                    const messageList = response.data;
+                    console.log(messageList);
+
+                    //For testing add same message 10 times
+                    for (let i = 0; i < 10; i++) {
+                        messageList.push(messageList[0]);
+                    }
+
+                    setMessageList(messageList);
                 })
                 .catch(function (error) {
                     if (error.response && error.response.status == 403) {
@@ -107,45 +115,65 @@ export default function PostMessagesList({ postId }) {
             {
                 !isLoading && !error &&
                 <div className='d-flex justify-content-end align-items-center'>
-                    <Typography variant="h6">
-                        #{postId} Thread
+                    <Typography
+                        variant="h6">
+                        #{postId} Discussion Thread
                     </Typography>
-                    <IconButton color="success" onClick={() => setRefresh(true)}>
+                    <IconButton
+                        aria-label="refresh"
+                        color="success"
+                        onClick={() => setRefresh(true)}>
                         <RefreshIcon />
                     </IconButton>
                 </div>
             }
             {
                 !isLoading && !error &&
-                <Card>
-                    <CardContent>
+                <Card className='message-card'>
+                    <CardContent className='message-card-content'>
+                        <div className='message-scroll'>
+                            {
+                                messageList && messageList.map((message) => (
+                                    <div
+                                        key={message.messageId}
+                                        className={message.isAuthor ? 'd-flex justify-content-start' : 'd-flex justify-content-end'}>
+                                        <Card
+                                            sx={{ minWidth: '30%', 'maxWidth': '60%', 'padding': '8px 12px', 'marginBottom': '8px' }}>
+                                            <div className='d-flex flex-row align-items-center'>
+                                                <Tooltip title={message?.sender?.name}>
+                                                    <Avatar
+                                                        onClick={() => handleUserDetailDialogOpen(message.sender)}
+                                                        style={{ 'cursor': 'pointer' }}
+                                                        className='mr-2'>
+                                                        {message?.sender?.name[0].toUpperCase() ?? '?'}
+                                                    </Avatar>
+                                                </Tooltip>
+                                                <h6
+                                                    fontFamily={'Monospace'}>
+                                                    {message.message}
+                                                </h6>
+                                            </div>
+                                        </Card>
+                                    </div>
+                                ))
+                            }
+                        </div>
                         {
-                            messageList && messageList.map((message) => (
-                                <div key={message.messageId} className={message.isAuthor ? 'd-flex justify-content-start' : 'd-flex justify-content-end'}>
-                                    <Card
-                                        sx={{ minWidth: '30%', 'maxWidth': '60%', 'padding': '8px 12px', 'marginBottom': '8px' }}>
-                                        <div className='d-flex flex-row align-items-center'>
-                                            <Tooltip title={message?.sender?.name}>
-                                                <Avatar
-                                                    onClick={() => handleUserDetailDialogOpen(message.sender)}
-                                                    style={{ 'cursor': 'pointer' }}
-                                                    className='mr-2'>
-                                                    {message?.sender?.name[0].toUpperCase() ?? '?'}
-                                                </Avatar>
-                                            </Tooltip>
-                                            <h6 fontFamily={'Monospace'}>{message.message}</h6>
-                                        </div>
-                                    </Card>
-                                </div>
-                            ))
-
-                        } {
-                            <form className='mt-3' onSubmit={handelMessageSend}>
-                                <TextField id="message" label="Message" variant="outlined" color="success" fullWidth />
-                                <div className='d-flex justify-content-end mt-3'>
-                                    <Button variant="contained" color="success" endIcon={<SendIcon />} type='submit'>
-                                        Send
-                                    </Button>
+                            <form className='message-send' onSubmit={handelMessageSend}>
+                                <TextField
+                                    id="message"
+                                    label="Message"
+                                    variant="outlined"
+                                    color="success"
+                                    fullWidth
+                                    size='small' />
+                                <div className='d-flex justify-content-end ml-3'>
+                                    <IconButton
+                                        aria-label="send"
+                                        type='submit'
+                                        style={{'backgroundColor':'lightgreen', 'padding':'0.6rem'}}>
+                                        <SendIcon style={{ 'color': 'green', 'height': '1.5rem', 'width': '1.5rem' }} />
+                                    </IconButton>
                                 </div>
                             </form>
                         }

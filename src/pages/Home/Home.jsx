@@ -61,9 +61,7 @@ export default function Home() {
 
     api.get(endPoint)
       .then((response) => {
-        if (response.data.length > 0) {
-          setPostSaved(true);
-        }
+        setPostSaved(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -77,6 +75,8 @@ export default function Home() {
   }
 
   useEffect(() => {
+
+    console.log('postSaved', postSaved);
 
     const fetchData = async () => {
 
