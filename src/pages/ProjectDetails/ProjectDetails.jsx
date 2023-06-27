@@ -8,6 +8,7 @@ import ProjectInfoDetails from '../../components/project/ProjectInfoDetails';
 import { Square, Task } from '@mui/icons-material';
 
 import AddToPhotosIcon from '@mui/icons-material/AddToPhotos';
+import Spinner from '../../components/general/spinner/Spinner';
 
 
 
@@ -49,7 +50,7 @@ export default function ProjectDetails() {
                     handleNavigateToLogin();
                     return;
                 }
-                setError(error.message);
+                setError(error.response.data.message);
             });
     }
 
@@ -79,10 +80,12 @@ export default function ProjectDetails() {
                         handleNavigateToLogin();
                         return;
                     }
-                    setError(error.message);
+                    setError(error.response.data.message);
                 })
                 .finally(function () {
-                    setIsLoading(false);
+                    setTimeout(() => {
+                        setIsLoading(false);
+                    }, 1000);
                 });
 
             api.get(`/api/v1/task/all/${projectId}`)
@@ -102,7 +105,7 @@ export default function ProjectDetails() {
                         handleNavigateToLogin();
                         return;
                     }
-                    setError(error.message);
+                    setError(error.response.data.message);
                 });
 
         }
@@ -114,10 +117,19 @@ export default function ProjectDetails() {
     return (
         <>
             {
-                isLoading && <Alert variant="primary">Loading...</Alert>
+                isLoading &&
+                <div className='d-flex justify-content-center'>
+                    <div className='loading-body'>
+                        <h6>Loading</h6>
+                        <Spinner />
+                    </div>
+                </div>
             }
             {
-                error && <Alert variant="danger">{error}</Alert>
+                error &&
+                <div className='d-flex justify-content-center mt-5'>
+                    <Alert severity="error">{error}</Alert>
+                </div >
             }
             {
                 !isLoading && !error && project &&

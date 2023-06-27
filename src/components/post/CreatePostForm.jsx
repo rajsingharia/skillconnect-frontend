@@ -25,7 +25,7 @@ export default function CreatePostForm({ setPostCreated, setError, handleNavigat
                     handleNavigateToLogin();
                     return;
                 }
-                setError(error.message);
+                setError(error.response.data.message);
             });
 
     }, []);
@@ -62,7 +62,7 @@ export default function CreatePostForm({ setPostCreated, setError, handleNavigat
                     handleNavigateToLogin();
                     return;
                 }
-                setError(error.message);
+                setError(error.response.data.message);
             });
 
     }

@@ -4,6 +4,7 @@ import Text from '@mui/material/Typography';
 import React from 'react'
 import { TimeStampToDate } from '../../utils/Helper';
 import TaskList from "../../components/project/TaskList"
+import { motion } from 'framer-motion';
 
 export default function ProjectInfoDetails({ isLoading, error, project, taskList, setRefresh }) {
 
@@ -23,42 +24,47 @@ export default function ProjectInfoDetails({ isLoading, error, project, taskList
             }
             {
                 !isLoading && !error &&
-                <Card>
-                    <CardContent>
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2, duration: 0.5 }}>
+                    <Card>
+                        <CardContent>
 
-                        <div >
+                            <div >
 
-                            <div className='d-flex justify-content-between'>
+                                <div className='d-flex justify-content-between'>
 
-                                <h5 className="card-title">{project?.projectName}</h5>
-                                <h5
-                                    className="card-title"
-                                    style={{ 'color': project?.isFinished ? 'red' : 'green', 'fontFamily': 'monospace', 'fontSize': '1rem', 'fontWeight': 'bold', 'letterSpacing': '1px' }}>
-                                    {project?.isFinished ? " (Finished)" : " (Ongoing)"}
-                                </h5>
+                                    <h5 className="card-title">{project?.projectName}</h5>
+                                    <h5
+                                        className="card-title"
+                                        style={{ 'color': project?.isFinished ? 'red' : 'green', 'fontFamily': 'monospace', 'fontSize': '1rem', 'fontWeight': 'bold', 'letterSpacing': '1px' }}>
+                                        {project?.isFinished ? " (Finished)" : " (Ongoing)"}
+                                    </h5>
 
+                                </div>
+
+                                <p className="card-text">{
+                                    project?.projectDetails
+                                }</p>
+                                <b>Start Date: </b>
+                                <Text component="span" variant="body2" color="text.primary" >
+                                    {TimeStampToDate(project?.startDate)}
+                                </Text>
+                                <b className='ml-3'>End Date: </b>
+                                <Text component="span" variant="body1" color="text.primary">
+                                    {TimeStampToDate(project?.endDate)}
+                                </Text>
                             </div>
 
-                            <p className="card-text">{
-                                project?.projectDetails
-                            }</p>
-                            <b>Start Date: </b>
-                            <Text component="span" variant="body2" color="text.primary" >
-                                {TimeStampToDate(project?.startDate)}
+
+
+                            <Text className='d-flex flex-row justify-content-start align-items-center mt-4'>
+                                Department: <Chip className='ml-3' label={project?.department?.departmentName} color='success' />
                             </Text>
-                            <b className='ml-3'>End Date: </b>
-                            <Text component="span" variant="body1" color="text.primary">
-                                {TimeStampToDate(project?.endDate)}
-                            </Text>
-                        </div>
-
-
-
-                        <Text className='d-flex flex-row justify-content-start align-items-center mt-4'>
-                            Department: <Chip className='ml-3' label={project?.department?.departmentName} color='success' />
-                        </Text>
-                    </CardContent>
-                </Card>
+                        </CardContent>
+                    </Card>
+                </motion.div>
             }
             {
                 taskList && taskList.length > 0 &&

@@ -69,7 +69,7 @@ export default function Home() {
           handleNavigateToLogin()
           return;
         }
-        setError(error.message);
+        setError(error.response.data.message);
       });
 
   }
@@ -89,11 +89,12 @@ export default function Home() {
         setPosts(response.data);
       })
         .catch(function (error) {
+          console.log(error);
           if (error.response && error.response.status == 403) {
             handleNavigateToLogin()
             return;
           }
-          setError(error.message);
+          setError(error.response.data.message);
         })
         .finally(function () {
           setTimeout(() => {

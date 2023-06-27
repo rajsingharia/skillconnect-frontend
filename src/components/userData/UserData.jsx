@@ -35,7 +35,7 @@ export default function UserData({ userData, updateUserData }) {
                         handleNavigateToLogin()
                         return;
                     }
-                    setError(error.message);
+                    setError(error.response.data.message);
                 });
         }
 

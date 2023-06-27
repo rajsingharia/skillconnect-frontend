@@ -30,7 +30,7 @@ export default function Register() {
         setDepartment(response.data[0].departmentId);
       })
       .catch(function (error) {
-        setError(error.message);
+        setError(error .message);
       });
   }, []);
 
@@ -77,7 +77,7 @@ export default function Register() {
         redirectToHome();
       })
       .catch(function (error) {
-        setError(error.message);
+        setError(error.response.data.message);
       })
       .finally(function () {
         setIsLoading(false);

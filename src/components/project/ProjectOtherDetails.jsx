@@ -4,6 +4,7 @@ import { getApi } from '../../utils/axiosConfig'
 import { Card, CardContent, Typography, Avatar, Grid, Tooltip, IconButton, Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Checkbox } from '@mui/material';
 import UserDetailsDialog from '../UserDetailDialog/UserDetailsDialog';
 import LoupeIcon from '@mui/icons-material/Loupe';
+import { motion } from 'framer-motion';
 
 export default function ProjectOtherDetails({ project, setRefresh }) {
 
@@ -72,64 +73,69 @@ export default function ProjectOtherDetails({ project, setRefresh }) {
     return (
 
         <div className='w-100'>
-            <Card>
-                <CardContent>
-                    <Typography
-                        variant="h6"
-                        className='d-flex mb-5 justify-content-between align-items-center' >
-                        <div className='d-flex align-items-center'>
-                            Created By :
-                            <Avatar
-                                className='ml-3' style={{ 'cursor': 'pointer' }}
-                                onClick={() => handleUserDetailDialogOpen(project?.projectCreator)}>
-                                {project?.projectCreator?.name[0].toUpperCase()}
-                            </Avatar>
-                        </div>
-                        {
-                            userId == project?.projectCreator?.userId &&
-                            <IconButton onClick={() => { setOpen(true) }}>
-                                <LoupeIcon sx={{ 'width': '40px', 'height': '40px' }} />
-                            </IconButton>
-                        }
-                    </Typography>
-
-                    {
-                        project?.usersAssignedProjectList?.length > 0 &&
+            <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.5 }}>
+                <Card>
+                    <CardContent>
                         <Typography
                             variant="h6"
-                            className='d-flex mt-3 justify-content-center mb-3'>
-                            Users in Project
+                            className='d-flex mb-5 justify-content-between align-items-center' >
+                            <div className='d-flex align-items-center'>
+                                Created By :
+                                <Avatar
+                                    className='ml-3' style={{ 'cursor': 'pointer' }}
+                                    onClick={() => handleUserDetailDialogOpen(project?.projectCreator)}>
+                                    {project?.projectCreator?.name[0].toUpperCase()}
+                                </Avatar>
+                            </div>
+                            {
+                                userId == project?.projectCreator?.userId &&
+                                <IconButton onClick={() => { setOpen(true) }}>
+                                    <LoupeIcon sx={{ 'width': '40px', 'height': '40px' }} />
+                                </IconButton>
+                            }
                         </Typography>
-                    }
-                    <Grid
-                        container
-                        direction="column"
-                        justifyContent="flex-center"
-                        alignItems="start">
+
                         {
-
-                            project?.usersAssignedProjectList?.map((user) => {
-                                return <Grid item>
-                                    <div className='d-flex justify-content-center align-items-center mb-3'>
-                                        <Tooltip title={user?.name} placement="top">
-                                            <Avatar
-                                                onClick={() => handleUserDetailDialogOpen(user)}
-                                                className='mr-3'
-                                                style={{ 'cursor': 'pointer', 'backgroundColor': 'green' }}>
-                                                {user?.name[0].toUpperCase()}
-                                            </Avatar>
-                                        </Tooltip>
-                                        < Typography variant="body1">
-                                            {user?.name}
-                                        </Typography>
-                                    </div>
-                                </Grid>
-                            })
+                            project?.usersAssignedProjectList?.length > 0 &&
+                            <Typography
+                                variant="h6"
+                                className='d-flex mt-3 justify-content-center mb-3'>
+                                Users in Project
+                            </Typography>
                         }
-                    </Grid>
+                        <Grid
+                            container
+                            direction="column"
+                            justifyContent="flex-center"
+                            alignItems="start">
+                            {
 
-                </CardContent>
-            </Card>
+                                project?.usersAssignedProjectList?.map((user) => {
+                                    return <Grid item>
+                                        <div className='d-flex justify-content-center align-items-center mb-3'>
+                                            <Tooltip title={user?.name} placement="top">
+                                                <Avatar
+                                                    onClick={() => handleUserDetailDialogOpen(user)}
+                                                    className='mr-3'
+                                                    style={{ 'cursor': 'pointer', 'backgroundColor': 'green' }}>
+                                                    {user?.name[0].toUpperCase()}
+                                                </Avatar>
+                                            </Tooltip>
+                                            < Typography variant="body1">
+                                                {user?.name}
+                                            </Typography>
+                                        </div>
+                                    </Grid>
+                                })
+                            }
+                        </Grid>
+
+                    </CardContent>
+                </Card>
+            </motion.div>
             <UserDetailsDialog
                 open={userDetailDialogOpen}
                 handleToClose={() => setUserDetailDialogOpen(false)}

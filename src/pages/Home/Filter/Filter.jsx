@@ -3,10 +3,11 @@ import React, { useEffect, useState } from 'react'
 import { getAuthApi } from '../../../utils/axiosConfig';
 import { Alert, Button, FormControl, IconButton, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import Spinner from '../../../components/general/spinner/Spinner';
+import { motion } from 'framer-motion';
 
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
-export default function Filter({filter, setFilter}) {
+export default function Filter({ filter, setFilter }) {
 
   console.log(filter);
 
@@ -38,14 +39,14 @@ export default function Filter({filter, setFilter}) {
           if (department == null) {
             setDepartment(lengthOfResponse + 1);
           }
-          
-          if(priority == null){
+
+          if (priority == null) {
             setPriority(3);
           }
 
         })
         .catch((error) => {
-          setError(error.message);
+          setError(error.response.data.message);
         })
         .finally(() => {
           setLoading(false);
@@ -117,7 +118,13 @@ export default function Filter({filter, setFilter}) {
       }
       {
         !loading && !error && departmentList &&
-        <div className='filter-body'>
+        <motion.div
+
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+
+          className='filter-body'>
           <div className="d-flex justify-content-between mb-3">
             <h3 className='font-weight-bold'>Filter's</h3>
             <IconButton onClick={() => { resetFilter() }}>
@@ -191,7 +198,7 @@ export default function Filter({filter, setFilter}) {
           <div className="mb-0">
             <Button variant="contained" fullWidth color='success' onClick={applyFilter}>Apply</Button>
           </div>
-        </div>
+        </motion.div>
       }
     </>
   )

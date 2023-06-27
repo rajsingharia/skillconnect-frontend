@@ -8,6 +8,7 @@ import SendIcon from '@mui/icons-material/Send';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import UserDetailsDialog from '../UserDetailDialog/UserDetailsDialog';
 import './PostMessagesList.css'
+import { motion } from 'framer-motion';
 
 export default function PostMessagesList({ postId }) {
 
@@ -51,7 +52,7 @@ export default function PostMessagesList({ postId }) {
                         handleNavigateToLogin();
                         return;
                     }
-                    setError(error.message);
+                    setError(error.response.data.message);
                 })
                 .finally(function () {
                     setTimeout(() => {
@@ -90,7 +91,7 @@ export default function PostMessagesList({ postId }) {
                     handleNavigateToLogin();
                     return;
                 }
-                setError(error.message);
+                setError(error.response.data.message);
                 event.target.message.value = '';
             })
             .finally(function () {
@@ -129,56 +130,61 @@ export default function PostMessagesList({ postId }) {
             }
             {
                 !isLoading && !error &&
-                <Card className='message-card'>
-                    <CardContent className='message-card-content'>
-                        <div className='message-scroll'>
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2, duration: 0.5 }}>
+                    <Card className='message-card'>
+                        <CardContent className='message-card-content'>
+                            <div className='message-scroll'>
+                                {
+                                    messageList && messageList.map((message) => (
+                                        <div
+                                            key={message.messageId}
+                                            className={message.isAuthor ? 'd-flex justify-content-start' : 'd-flex justify-content-end'}>
+                                            <Card
+                                                sx={{ minWidth: '30%', 'maxWidth': '60%', 'padding': '8px 12px', 'marginBottom': '8px' }}>
+                                                <div className='d-flex flex-row align-items-center'>
+                                                    <Tooltip title={message?.sender?.name}>
+                                                        <Avatar
+                                                            onClick={() => handleUserDetailDialogOpen(message.sender)}
+                                                            style={{ 'cursor': 'pointer' }}
+                                                            className='mr-2'>
+                                                            {message?.sender?.name[0].toUpperCase() ?? '?'}
+                                                        </Avatar>
+                                                    </Tooltip>
+                                                    <h6
+                                                        fontFamily={'Monospace'}>
+                                                        {message.message}
+                                                    </h6>
+                                                </div>
+                                            </Card>
+                                        </div>
+                                    ))
+                                }
+                            </div>
                             {
-                                messageList && messageList.map((message) => (
-                                    <div
-                                        key={message.messageId}
-                                        className={message.isAuthor ? 'd-flex justify-content-start' : 'd-flex justify-content-end'}>
-                                        <Card
-                                            sx={{ minWidth: '30%', 'maxWidth': '60%', 'padding': '8px 12px', 'marginBottom': '8px' }}>
-                                            <div className='d-flex flex-row align-items-center'>
-                                                <Tooltip title={message?.sender?.name}>
-                                                    <Avatar
-                                                        onClick={() => handleUserDetailDialogOpen(message.sender)}
-                                                        style={{ 'cursor': 'pointer' }}
-                                                        className='mr-2'>
-                                                        {message?.sender?.name[0].toUpperCase() ?? '?'}
-                                                    </Avatar>
-                                                </Tooltip>
-                                                <h6
-                                                    fontFamily={'Monospace'}>
-                                                    {message.message}
-                                                </h6>
-                                            </div>
-                                        </Card>
+                                <form className='message-send' onSubmit={handelMessageSend}>
+                                    <TextField
+                                        id="message"
+                                        label="Message"
+                                        variant="outlined"
+                                        color="success"
+                                        fullWidth
+                                        size='small' />
+                                    <div className='d-flex justify-content-end ml-3'>
+                                        <IconButton
+                                            aria-label="send"
+                                            type='submit'
+                                            style={{ 'backgroundColor': 'lightgreen', 'padding': '0.6rem' }}>
+                                            <SendIcon style={{ 'color': 'green', 'height': '1.5rem', 'width': '1.5rem' }} />
+                                        </IconButton>
                                     </div>
-                                ))
+                                </form>
                             }
-                        </div>
-                        {
-                            <form className='message-send' onSubmit={handelMessageSend}>
-                                <TextField
-                                    id="message"
-                                    label="Message"
-                                    variant="outlined"
-                                    color="success"
-                                    fullWidth
-                                    size='small' />
-                                <div className='d-flex justify-content-end ml-3'>
-                                    <IconButton
-                                        aria-label="send"
-                                        type='submit'
-                                        style={{'backgroundColor':'lightgreen', 'padding':'0.6rem'}}>
-                                        <SendIcon style={{ 'color': 'green', 'height': '1.5rem', 'width': '1.5rem' }} />
-                                    </IconButton>
-                                </div>
-                            </form>
-                        }
-                    </CardContent>
-                </Card>
+                        </CardContent>
+                    </Card>
+                </motion.div>
             }
             <UserDetailsDialog
                 open={userDetailDialogOpen}

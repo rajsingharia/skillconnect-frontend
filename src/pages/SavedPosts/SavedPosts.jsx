@@ -4,6 +4,7 @@ import { getApi } from '../../utils/axiosConfig'
 import { Alert, Box, Grid, } from '@mui/material'
 import SavedPostCard from '../../components/post/SavedPostCard'
 import Spinner from '../../components/general/spinner/Spinner'
+import { motion } from 'framer-motion'
 
 export default function SavedPosts() {
 
@@ -34,7 +35,7 @@ export default function SavedPosts() {
                 .finally(() => {
                     setTimeout(() => {
                         setLoading(false);
-                      }, 1000);
+                    }, 1000);
                     //setLoading(false);
                 })
         }
@@ -74,10 +75,17 @@ export default function SavedPosts() {
                         <Box sx={{ flexGrow: 1 }}>
                             <Grid container spacing={2}>
                                 {
-                                    savedPosts?.map((post) => {
+                                    savedPosts?.map((post, idx) => {
                                         return < Grid item xs={6}>
-                                            <SavedPostCard post={post} />
+                                            <motion.div
+                                                key={post.postId}
+                                                initial={{ opacity: 0, y: 20 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                transition={{ delay: 0.2 * idx }}>
+                                                <SavedPostCard post={post} />
+                                            </motion.div>
                                         </Grid>
+
                                     })
                                 }
                             </Grid>

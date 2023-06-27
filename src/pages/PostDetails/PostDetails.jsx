@@ -39,7 +39,7 @@ export default function PostDetails() {
             handleNavigateToLogin();
             return;
           }
-          setError(error.message);
+          setError(error.response.data.message);
         })
         .finally(function () {
           setTimeout(() => {

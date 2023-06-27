@@ -2,6 +2,7 @@
 import React from 'react'
 import PostRow from '../../../components/post/PostRow'
 import { Alert } from '@mui/material'
+import { motion } from 'framer-motion'
 
 export default function ListOfPost({ posts, saveOrUnsavePost }) {
 
@@ -17,8 +18,14 @@ export default function ListOfPost({ posts, saveOrUnsavePost }) {
                         <Alert severity="info">No post found</Alert>
                     </div>
                     :
-                    posts?.map((post) => {
-                        return <PostRow key={post.postId} post={post} saveOrUnsavePost={saveOrUnsavePost}></PostRow>
+                    posts?.map((post, idx) => {
+                        return <motion.div
+                            key={post.postId}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.1 * idx}}>
+                            <PostRow post={post} saveOrUnsavePost={saveOrUnsavePost}></PostRow>
+                        </motion.div>
                     })
 
             }

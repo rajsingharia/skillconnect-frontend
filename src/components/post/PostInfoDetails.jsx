@@ -5,6 +5,7 @@ import { Alert, Avatar, Button, Card, CardContent, Chip, Grid, Tooltip } from '@
 import { TimeStampToDate } from '../../utils/Helper';
 import { Link } from 'react-router-dom';
 import UserDetailsDialog from '../UserDetailDialog/UserDetailsDialog';
+import { motion } from 'framer-motion';
 
 export default function PostInfoDetails({ isLoading, error, post }) {
 
@@ -32,7 +33,7 @@ export default function PostInfoDetails({ isLoading, error, post }) {
     const hasAppliedBefore = () => {
         console.log(userId);
         console.log(post?.listOfApplicants?.map(user => user.userId));
-        if(post?.listOfApplicants?.map(user => user.userId)?.find(id => id==userId)) {
+        if (post?.listOfApplicants?.map(user => user.userId)?.find(id => id == userId)) {
             console.log('has applied before');
             return true;
         }
@@ -45,7 +46,7 @@ export default function PostInfoDetails({ isLoading, error, post }) {
 
     const isInProject = () => {
         if (isCreatorOfProject()) return true;
-        if(post.project.usersAssignedProjectList.map(user => user.userId)?.find(id => id==userId)) return true;
+        if (post.project.usersAssignedProjectList.map(user => user.userId)?.find(id => id == userId)) return true;
         return false;
     }
 
@@ -89,138 +90,144 @@ export default function PostInfoDetails({ isLoading, error, post }) {
             }
             {
                 !isLoading && !error &&
-                <Card>
-                    <CardContent>
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2, duration: 0.5 }}
+                >
+                    <Card>
+                        <CardContent>
 
-                        <div >
-                            <div className='mb-4'>
-                                <div className='d-flex justify-content-between'>
-                                    <h3 className="card-title fw-bold">{post?.postTitle}</h3>
-                                    {
-                                        post?.isOpen ?
-                                            <Chip
-                                                label="OPEN"
-                                                color="success"
-                                                variant="outlined"
-                                                sx={{ 'fontFamily': 'monospace', 'fontSize': '1rem', 'fontWeight': 'bold', 'letterSpacing': '1px' }}
-                                            />
-                                            :
-                                            <Chip
-                                                label="CLOSED"
-                                                color="error"
-                                                variant="outlined"
-                                                sx={{ 'fontFamily': 'monospace', 'fontSize': '1rem', 'fontWeight': 'bold', 'letterSpacing': '1px' }}
-                                            />
-                                    }
-                                </div>
-                            </div>
-
-                            <div className='mb-2'>
-                                <p className="card-subtitle"
-                                    style={{ 'color': 'grey', 'fontWeight': '400' }}>
-                                    <b style={{ 'color': 'black' }}>● Posted On: </b>
-                                    {TimeStampToDate(post?.createdOn)}
-                                </p>
-                            </div>
-
-                            <div className='mb-4'>
-                                <p className="card-subtitle"
-                                    style={{ 'color': 'grey', 'fontWeight': '400' }}>
-                                    <b style={{ 'color': 'black' }}>● Urgency Level: </b>
-                                    {findUrgencyLevel(post?.urgencyLevel)}
-                                </p>
-                            </div>
-
-
-
-                            <div className='mb-4'>
-                                <p className="card-text">{post?.postDescription}</p>
-                            </div>
-
-
-                            <div className='mb-4'
-                                style={{ 'backgroundColor': '#23c552', 'padding': '8px', 'borderRadius': '10px', 'width': 'fit-content' }}>
-
-                                <Link
-                                    to={`/project/${post?.project?.projectId}`}
-                                    style={{ 'textDecoration': 'none', 'color': 'white' }}>
-                                    <b>Project: </b>
-                                    {post?.project?.projectName}
-                                </Link>
-                            </div>
-
-                        </div>
-
-                        <div className="mt-2">
-                            <Grid container
-                                direction="row"
-                                justifyContent="flex-start"
-                                alignItems="center"
-                                gap={1}>
-                                {
-                                    post?.listOfSkillsRequired && post?.listOfSkillsRequired?.map((skill, i) => {
-                                        return <Grid key={i}>
-                                            <Chip label={skill} color='success' />
-                                        </Grid>
-                                    })
-                                }
-                            </Grid>
-                        </div>
-                        {
-                            post?.isOpen && !isInProject() && !hasAppliedBefore() &&
-                            <div className='mt-2'>
-                                <Button variant="contained" color="success" size='large' onClick={applyToPost}>
-                                    Apply
-                                </Button>
-                            </div>
-                        }
-                        {
-                            hasAppliedBefore() &&
-                            < div className='mt-4'>
-                                <h6>
-                                    You have already applied for this post
-                                </h6>
-                            </div>
-                        }
-                        {
-                            post?.isOpen && post?.listOfApplicants?.length > 0 &&
                             <div >
-                                {
-                                    isCreatorOfProject() &&
-                                    <h6 className='mt-4'>{post?.listOfApplicants?.length} People have applied for this post</h6>
-                                }
-                                <div className='d-flex flex-wrap'>
-                                    {
-                                        post?.listOfApplicants?.map((user) => {
-                                            return <div key={user.userId} className='d-flex flex-row m-1 align-items-center' >
-                                                <Tooltip title={user.name} placement="top">
-                                                    <Avatar
-                                                        className='mr-2'
-                                                        onClick={() => handleUserDetailDialogOpen(user)}>
-                                                        {user?.name[0].toUpperCase() ?? '?'}
-                                                    </Avatar>
-                                                </Tooltip>
-                                                <h6 className='mr-3'>{user.name}</h6>
-                                                {
-                                                    isCreatorOfProject() &&
-                                                    <Button
-                                                        variant="contained"
-                                                        color="success"
-                                                        size='small'
-                                                        onClick={acceptApplication(user.userId)}>
-                                                        Accept
-                                                    </Button>
-                                                }
+                                <div className='mb-4'>
+                                    <div className='d-flex justify-content-between'>
+                                        <h3 className="card-title fw-bold">{post?.postTitle}</h3>
+                                        {
+                                            post?.isOpen ?
+                                                <Chip
+                                                    label="OPEN"
+                                                    color="success"
+                                                    variant="outlined"
+                                                    sx={{ 'fontFamily': 'monospace', 'fontSize': '1rem', 'fontWeight': 'bold', 'letterSpacing': '1px' }}
+                                                />
+                                                :
+                                                <Chip
+                                                    label="CLOSED"
+                                                    color="error"
+                                                    variant="outlined"
+                                                    sx={{ 'fontFamily': 'monospace', 'fontSize': '1rem', 'fontWeight': 'bold', 'letterSpacing': '1px' }}
+                                                />
+                                        }
+                                    </div>
+                                </div>
 
-                                            </div>
+                                <div className='mb-2'>
+                                    <p className="card-subtitle"
+                                        style={{ 'color': 'grey', 'fontWeight': '400' }}>
+                                        <b style={{ 'color': 'black' }}>● Posted On: </b>
+                                        {TimeStampToDate(post?.createdOn)}
+                                    </p>
+                                </div>
+
+                                <div className='mb-4'>
+                                    <p className="card-subtitle"
+                                        style={{ 'color': 'grey', 'fontWeight': '400' }}>
+                                        <b style={{ 'color': 'black' }}>● Urgency Level: </b>
+                                        {findUrgencyLevel(post?.urgencyLevel)}
+                                    </p>
+                                </div>
+
+
+
+                                <div className='mb-4'>
+                                    <p className="card-text">{post?.postDescription}</p>
+                                </div>
+
+
+                                <div className='mb-4'
+                                    style={{ 'backgroundColor': '#23c552', 'padding': '8px', 'borderRadius': '10px', 'width': 'fit-content' }}>
+
+                                    <Link
+                                        to={`/project/${post?.project?.projectId}`}
+                                        style={{ 'textDecoration': 'none', 'color': 'white' }}>
+                                        <b>Project: </b>
+                                        {post?.project?.projectName}
+                                    </Link>
+                                </div>
+
+                            </div>
+
+                            <div className="mt-2">
+                                <Grid container
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    alignItems="center"
+                                    gap={1}>
+                                    {
+                                        post?.listOfSkillsRequired && post?.listOfSkillsRequired?.map((skill, i) => {
+                                            return <Grid key={i}>
+                                                <Chip label={skill} color='success' />
+                                            </Grid>
                                         })
                                     }
-                                </div>
-
+                                </Grid>
                             </div>
-                        }
-                    </CardContent>
-                </Card>
+                            {
+                                post?.isOpen && !isInProject() && !hasAppliedBefore() &&
+                                <div className='mt-2'>
+                                    <Button variant="contained" color="success" size='large' onClick={applyToPost}>
+                                        Apply
+                                    </Button>
+                                </div>
+                            }
+                            {
+                                hasAppliedBefore() &&
+                                < div className='mt-4'>
+                                    <h6>
+                                        You have already applied for this post
+                                    </h6>
+                                </div>
+                            }
+                            {
+                                post?.isOpen && post?.listOfApplicants?.length > 0 &&
+                                <div >
+                                    {
+                                        isCreatorOfProject() &&
+                                        <h6 className='mt-4'>{post?.listOfApplicants?.length} People have applied for this post</h6>
+                                    }
+                                    <div className='d-flex flex-wrap'>
+                                        {
+                                            post?.listOfApplicants?.map((user) => {
+                                                return <div key={user.userId} className='d-flex flex-row m-1 align-items-center' >
+                                                    <Tooltip title={user.name} placement="top">
+                                                        <Avatar
+                                                            className='mr-2'
+                                                            onClick={() => handleUserDetailDialogOpen(user)}>
+                                                            {user?.name[0].toUpperCase() ?? '?'}
+                                                        </Avatar>
+                                                    </Tooltip>
+                                                    <h6 className='mr-3'>{user.name}</h6>
+                                                    {
+                                                        isCreatorOfProject() &&
+                                                        <Button
+                                                            variant="contained"
+                                                            color="success"
+                                                            size='small'
+                                                            onClick={acceptApplication(user.userId)}>
+                                                            Accept
+                                                        </Button>
+                                                    }
+
+                                                </div>
+                                            })
+                                        }
+                                    </div>
+
+                                </div>
+                            }
+                        </CardContent>
+                    </Card>
+                </motion.div>
             }
             <UserDetailsDialog
                 open={userDetailDialogOpen}

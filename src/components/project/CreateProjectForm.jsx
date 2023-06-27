@@ -56,7 +56,7 @@ export default function CreateProjectForm({
                         handleNavigateToLogin();
                         return;
                     }
-                    setError(error.message);
+                    setError(error.response.data.message);
                 });
         }
     }, [department])
@@ -95,7 +95,7 @@ export default function CreateProjectForm({
                     handleNavigateToLogin();
                     return;
                 }
-                setError(error.message);
+                setError(error.response.data.message);
             });
 
     }

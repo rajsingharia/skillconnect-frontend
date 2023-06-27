@@ -61,7 +61,7 @@ export default function MyProjects() {
             handleNavigateToLogin()
             return;
           }
-          setError(error.message);
+          setError(error.response.data.message);
         })
         .finally(function () {
           setTimeout(() => {
@@ -79,7 +79,7 @@ export default function MyProjects() {
             handleNavigateToLogin()
             return;
           }
-          setError(error.message);
+          setError(error.response.data.message);
         });
 
     }
