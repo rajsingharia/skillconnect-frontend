@@ -36,30 +36,29 @@ export default function PostMessagesList({ postId }) {
             //Message List for this post
 
             api.get(`api/v1/message/${postId}`)
-                .then(function (response) {
+                .then((response) => {
                     const messageList = response.data;
                     console.log(messageList);
 
                     //For testing add same message 10 times
-                    for (let i = 0; i < 10; i++) {
-                        messageList.push(messageList[0]);
-                    }
+                    // for (let i = 0; i < 10; i++) {
+                    //     messageList.push(messageList[0]);
+                    // }
 
                     setMessageList(messageList);
                 })
-                .catch(function (error) {
+                .catch((error) => {
                     if (error.response && error.response.status == 403) {
                         handleNavigateToLogin();
                         return;
                     }
                     setError(error.response.data.message);
                 })
-                .finally(function () {
+                .finally(() => {
                     setTimeout(() => {
                         setIsLoading(false);
                     }, 1000);
                 });
-
 
         }
 

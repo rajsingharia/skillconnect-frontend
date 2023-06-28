@@ -57,7 +57,7 @@ export default function UserData({ userData, updateUserData }) {
             email: email,
             departmentId: department,
             experience: experience,
-            listOfSkills: listOfSkills,
+            listOfSkillStrings: listOfSkills.map((skill) => skill.skillName)
         }
         console.log(newUserData);
         updateUserData(newUserData);
@@ -71,12 +71,15 @@ export default function UserData({ userData, updateUserData }) {
 
     const addNewSkill = (event) => {
         event.preventDefault();
-        setListOfSkills((skills) => [...skills, skillEntered]);
+        setListOfSkills((skills) => [...skills, {
+            skillId: skills.length + 1,
+            skillName: skillEntered
+        }]);
         setSkillEntered('');
     }
 
     const handleSkillDelete = (skillToDelete) => () => {
-        setListOfSkills((skills) => skills.filter((skill) => skill !== skillToDelete));
+        setListOfSkills((skills) => skills.filter((skill) => skill.skillName !== skillToDelete));
     };
 
     return (
@@ -140,22 +143,22 @@ export default function UserData({ userData, updateUserData }) {
                                 <div className="d-flex flex-row">
                                     {
                                         isEditable ?
-                                        <FormControl fullWidth className='mr-3'>
-                                            <TextField
-                                                id="listOfSkillsRequired"
-                                                label="Skills"
-                                                variant="outlined"
-                                                labelId='listOfSkillsRequired'
-                                                value={skillEntered}
-                                                fullWidth
-                                                disabled={isEditable ? false : true}
-                                                onChange={(event) => setSkillEntered(event.target.value)}
-                                            />
-                                        </FormControl>
-                                        :
-                                        <h7 style={{'color':'gray', 'marginLeft':'5px'}}>
-                                            Skills List
-                                        </h7>
+                                            <FormControl fullWidth className='mr-3'>
+                                                <TextField
+                                                    id="listOfSkillsRequired"
+                                                    label="Skills"
+                                                    variant="outlined"
+                                                    labelId='listOfSkillsRequired'
+                                                    value={skillEntered}
+                                                    fullWidth
+                                                    disabled={isEditable ? false : true}
+                                                    onChange={(event) => setSkillEntered(event.target.value)}
+                                                />
+                                            </FormControl>
+                                            :
+                                            <h7 style={{ 'color': 'gray', 'marginLeft': '5px' }}>
+                                                Skills List
+                                            </h7>
                                     }
                                     {
                                         isEditable &&
@@ -164,18 +167,18 @@ export default function UserData({ userData, updateUserData }) {
                                 </div>
                                 <div style={{ 'maxWidth': '100%', 'display': 'flex', 'flexFlow': 'row wrap' }}>
                                     {
-                                        listOfSkills?.map((skill, i) => (
-                                            <ListItem key={i} style={{ 'width': 'fit-content' }}>
+                                        listOfSkills?.map((skill) => (
+                                            <ListItem key={skill.skillId} style={{ 'width': 'fit-content' }}>
                                                 {
                                                     isEditable ?
                                                         <Chip
-                                                            label={skill}
+                                                            label={skill.skillName}
                                                             color="success"
-                                                            onDelete={skill.label === 'React' ? undefined : handleSkillDelete(skill)}
+                                                            onDelete={skill.label === 'React' ? undefined : handleSkillDelete(skill.skillName)}
                                                         />
                                                         :
                                                         <Chip
-                                                            label={skill}
+                                                            label={skill.skillName}
                                                             color="success"
                                                         />
 

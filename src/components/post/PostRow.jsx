@@ -105,7 +105,7 @@ export default function PostRow({ post, saveOrUnsavePost}) {
                     {
                         post.listOfSkillsRequired && post.listOfSkillsRequired.map((skill) => {
                             return <Grid >
-                                <Chip label={skill} color='success' />
+                                <Chip key={skill.skillId} label={skill.skillName} color='success' />
                             </Grid>
                         })
                     }

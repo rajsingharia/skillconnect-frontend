@@ -47,7 +47,7 @@ export default function CreatePostForm({ setPostCreated, setError, handleNavigat
             postTitle: postTitle,
             postDescription: postDescription,
             urgencyLevel: priority,
-            listOfSkillsRequired: listOfSkillsRequired,
+            listOfSkillStringsRequired: listOfSkillsRequired,
         }
 
         console.log(post);

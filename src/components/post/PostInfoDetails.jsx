@@ -164,9 +164,9 @@ export default function PostInfoDetails({ isLoading, error, post }) {
                                     alignItems="center"
                                     gap={1}>
                                     {
-                                        post?.listOfSkillsRequired && post?.listOfSkillsRequired?.map((skill, i) => {
-                                            return <Grid key={i}>
-                                                <Chip label={skill} color='success' />
+                                        post?.listOfSkillsRequired && post?.listOfSkillsRequired?.map((skill) => {
+                                            return <Grid key={skill.skillId}>
+                                                <Chip label={skill.skillName} color='success' />
                                             </Grid>
                                         })
                                     }
