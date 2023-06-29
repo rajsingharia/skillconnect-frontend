@@ -13,7 +13,7 @@ export default function TaskList({ taskList, setRefresh }) {
 
     const api = getApi();
 
-    const [open, setOpen] = useState();
+    const [open, setOpen] = useState(false);
     const [clickedTask, setClickedTask] = useState("");
     const [status, setStatus] = useState();
 
@@ -114,8 +114,9 @@ export default function TaskList({ taskList, setRefresh }) {
                 {
                     taskList.map((task) => (
                         <VerticalTimelineElement
+                            key={task.taskId}
                             className="vertical-timeline-element--work"
-                            contentStyle= {contentStyle(task.taskStatus)}
+                            contentStyle={contentStyle(task.taskStatus)}
                             contentArrowStyle={contentArrowStyle(task.taskStatus)}
                             date={TimeStampToDate(task.taskCreatedOn)}
                             iconStyle={iconStyle(task.taskStatus)}
@@ -126,7 +127,7 @@ export default function TaskList({ taskList, setRefresh }) {
                             }>
                             <div className='d-flex flex-row justify-content-between'>
                                 <h5 className="vertical-timeline-element-title">{task.taskTitle}</h5>
-                                <h7 className="vertical-timeline-element-subtitle">{findStatus(task.taskStatus)}</h7>
+                                <h6 className="vertical-timeline-element-subtitle">{findStatus(task.taskStatus)}</h6>
                             </div>
                             <Button
                                 variant="outlined"
@@ -174,7 +175,13 @@ const TaskDetailAndStatusChangeDialog = ({ task, open, handleClose, status, setS
                         {task.taskDescription}
                     </p>
                     <p>
-                        Registered On {TimeStampToDate(task.taskCreatedOn)}
+                        <b>Registered On : </b>{TimeStampToDate(task.taskCreatedOn)}
+                    </p>
+                    <p>
+                        <b>Task Status : </b>{task.taskStatus}
+                    </p>
+                    <p>
+                        <b>Task Assigned To : </b>{`#SSDS${task.taskAssignedUserId ?? ''} ${task.taskAssignedUserName ?? ''}`}
                     </p>
 
                     <FormControl>

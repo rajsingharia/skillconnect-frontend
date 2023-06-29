@@ -54,6 +54,7 @@ export default function MyProjects() {
 
       api.get(`api/v1/project/${projectType}`)
         .then(function (response) {
+          console.log(response.data);
           setUserProjects(response.data);
         })
         .catch(function (error) {

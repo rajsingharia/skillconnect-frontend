@@ -106,7 +106,7 @@ export default function PostMessagesList({ postId }) {
                 isLoading &&
                 <div className='d-flex justify-content-center align-items-center w-100 h-100'
                     style={{ 'backgroundColor': 'gray', 'borderRadius': '8px' }}>
-                    <Alert severity="info" >Loading Messages</Alert>
+                    <Alert severity="info" >Loading Comments</Alert>
                 </div>
             }
             {

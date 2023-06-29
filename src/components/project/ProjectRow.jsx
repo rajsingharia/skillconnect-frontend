@@ -4,7 +4,8 @@ import { TimeStampToDate } from '../../utils/Helper';
 import Text from '@mui/material/Typography';
 import './projectRow.css'
 import LabelIcon from '@mui/icons-material/Label';
-import { Tooltip } from '@mui/material';
+import { Chip, Tooltip } from '@mui/material';
+import { motion } from 'framer-motion';
 
 export default function ProjectRow({ project }) {
 
@@ -26,7 +27,7 @@ export default function ProjectRow({ project }) {
                     </h5>
                 </div>
                 {
-                    project.projectCreator.userId == userId &&
+                    project.isCreator &&
                     <Tooltip title="You are the creator of this project">
                         <LabelIcon color='success' />
                     </Tooltip>
@@ -35,54 +36,73 @@ export default function ProjectRow({ project }) {
 
 
             <div className="card-body">
-                <p className="card-text">{
-                    project.projectDetails
-                }</p>
-                <p className="card-text">
-                    <b>Duration: </b>
-                    <Text component="span" variant="body2" color="text.primary" >
-                        {TimeStampToDate(project.startDate)}
-                    </Text>
-                    <Text component="span" variant="body2" color="text.primary">
-                        {" to "}
-                    </Text>
-                    <Text component="span" variant="body2" color="text.primary">
-                        {TimeStampToDate(project.endDate)}
-                    </Text>
-                </p>
+                <p className="card-text">{project.projectDetails}</p>
+                <div className="card-text">
+                    <div className="d-flex justify-content-between align-items-center">
+                        <div>
+                            <b>Duration: </b>
+                            <Text component="span" variant="body2" color="text.primary" >
+                                {TimeStampToDate(project.startDate)}
+                            </Text>
+                            <Text className='mr-3 ml-3' component="span" variant="body2" color="text.primary">
+                                <b>to</b>
+                            </Text>
+                            <Text component="span" variant="body2" color="text.primary">
+                                {TimeStampToDate(project.endDate)}
+                            </Text>
+                        </div>
+                        <div className='d-flex flex-row'>
+                            <motion.div
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.2, duration: 0.5 }}>
+                                <Chip label={`Tasks: ${project.countOfTaskTypes.tasksCount ?? 0}`} />
+                            </motion.div>
+                            <motion.div
+                                initial={{ opacity: 0, x: 30 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.2, duration: 0.5 }}>
+                                <Chip className='ml-3' label={`Completed: ${project.countOfTaskTypes.tasksCompleted ?? 0}`} color='success' />
+                            </motion.div>
+                            <motion.div
+                                initial={{ opacity: 0, x: 40 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.2, duration: 0.5 }}>
+                                <Chip className='ml-3' label={`Pending: ${project.countOfTaskTypes.tasksPending ?? 0}`} color='warning' />
+                            </motion.div>
+                            <motion.div
+                                initial={{ opacity: 0, x: 50 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.2, duration: 0.5 }}>
+                                <Chip className='ml-3' label={`In Progress: ${project.countOfTaskTypes.tasksInProgress ?? 0}`} color='error' />
+                            </motion.div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );
 }
 
 
-// {
-//     "projectId": 1,
-//     "projectName": "Skill Connect",
-//     "projectDetails": "Help connect specific skilled people within organisation",
-//     "startDate": "2023-06-10",
-//     "endDate": "2023-06-10",
-//     "isFinished": false,
-//     "departmentName": "IT",
-//     "usersAssignedProjectList": [
-//         {
-//             "userId": 1,
-//             "name": "test",
-//             "email": "test@gmail.com",
-//             "password": "$2a$10$yHIALhRu4KU7fpgiiWua4OMhXwDbnJX3pTF6AE25SB83h7ylPrpOu",
-//             "departmentName": "IT",
-//             "joiningDate": "2023-06-15",
-//             "role": "USER",
-//             "enabled": true,
-//             "accountNonLocked": true,
-//             "authorities": [
-//                 {
-//                     "authority": "USER"
-//                 }
-//             ],
-//             "username": "test@gmail.com",
-//             "credentialsNonExpired": true,
-//             "accountNonExpired": true
-//         }
-//     ]
-// }
+/*
+[
+    {
+        "projectId": 1,
+        "projectName": "Chat App Backend",
+        "projectDetails": "In the next phase of the chat app backend project, the main objectives are scalability and performance optimization. This involves implementing a distributed architecture to handle increasing user load, improving real-time communication through WebSocket integration, and enhancing database management for efficient data storage and retrieval. Additionally, security measures like encryption and authentication will be strengthened, and new features like message search and user analytics will be developed to further enhance the chat apps functionality and user experience.",
+        "startDate": "2023-06-19T00:00:00.000+00:00",
+        "endDate": "2023-06-30T00:00:00.000+00:00",
+        "isFinished": false,
+        "departmentName": "Software Development",
+        "isCreator": true,
+        "countOfTaskTypes": {
+            "tasksCount": 3,
+            "tasksCompleted": 2,
+            "tasksPending": 1,
+            "tasksInProgress": null
+        }
+    }
+]
+*/
+

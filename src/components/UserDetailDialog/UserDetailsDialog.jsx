@@ -32,8 +32,7 @@ export default function UserDetailsDialog({ open, handleToClose, user }) {
           <b>Skills: </b>
           {
             user?.listOfSkills?.map((skill) => (
-              <span key={skill}>{skill}, </span>
-
+              <span key={skill.skillId}>{skill.skillName}, </span>
             ))
           }
         </p>

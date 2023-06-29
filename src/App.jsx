@@ -23,8 +23,8 @@ function App() {
       <NavBar />
       <div className='route-body'>
         <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/projects' element={<Projects />} />
+          <Route path='/posts' element={<Home />} />
+          <Route path='/' element={<Projects />} />
           <Route path='/saved-posts' element={<SavedPosts />} />
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />

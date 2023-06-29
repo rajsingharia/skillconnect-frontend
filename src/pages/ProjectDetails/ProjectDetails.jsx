@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { getApi } from '../../utils/axiosConfig';
-import { Alert, Card, CardContent, Typography, Avatar, Grid, IconButton, Button, Dialog, DialogTitle, DialogContent, TextField, Box, Container } from '@mui/material';
+import { Alert, Card, CardContent, Typography, Avatar, Grid, IconButton, Button, Dialog, DialogTitle, DialogContent, TextField, Box, Container, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import './projectDetails.css';
 import ProjectOtherDetails from '../../components/project/ProjectOtherDetails';
 import ProjectInfoDetails from '../../components/project/ProjectInfoDetails';
@@ -24,34 +24,36 @@ export default function ProjectDetails() {
     const [project, setProject] = useState(null);
     const [refresh, setRefresh] = useState();
     const [open, setOpen] = useState(false);
-
     const [taskList, setTaskList] = useState([]);
+    const [usersAssignedProjectList, setUsersAssignedProjectList] = useState([]);
+
+
 
     const projectId = location.pathname.split('/')[2];
 
 
 
-    const createNewTask = (event) => {
-        event.preventDefault();
+    const createNewTask = (task) => {
 
-        const task = {
-            taskTitle: event.target.taskTitle.value,
-            taskDescription: event.target.taskDescription.value,
-        }
+        alert(JSON.stringify(task));
 
-        api.post(`api/v1/task/${projectId}/add-new-task`, task)
-            .then(function (response) {
-                console.log(response.data);
-                setRefresh(true);
-                setOpen(false);
-            })
-            .catch(function (error) {
-                if (error.response && error.response.status == 403) {
-                    handleNavigateToLogin();
-                    return;
-                }
-                setError(error.response.data.message);
-            });
+        //event.preventDefault();
+
+
+
+        // api.post(`api/v1/task/${projectId}/add-new-task`, task)
+        //     .then(function (response) {
+        //         console.log(response.data);
+        //         setRefresh(true);
+        //         setOpen(false);
+        //     })
+        //     .catch(function (error) {
+        //         if (error.response && error.response.status == 403) {
+        //             handleNavigateToLogin();
+        //             return;
+        //         }
+        //         setError(error.response.data.message);
+        //     });
     }
 
     const openNewTaskDialog = () => {
@@ -74,6 +76,7 @@ export default function ProjectDetails() {
                 .then(function (response) {
                     console.log(response.data);
                     setProject(response.data);
+                    setUsersAssignedProjectList(response?.data?.usersAssignedProjectList);
                 })
                 .catch(function (error) {
                     if (error.response && error.response.status == 403) {
@@ -168,6 +171,7 @@ export default function ProjectDetails() {
                     open={open}
                     handleClose={() => setOpen(false)}
                     createNewTask={createNewTask}
+                    usersAssignedProjectList={usersAssignedProjectList}
                 />
             }
         </>
@@ -175,7 +179,21 @@ export default function ProjectDetails() {
 }
 
 
-const CreateNewTaskDialog = ({ open, handleClose, createNewTask }) => {
+const CreateNewTaskDialog = ({ open, handleClose, createNewTask, usersAssignedProjectList }) => {
+
+    const [taskAssignedUserId, setTaskAssignedUserId] = useState('');
+
+    const submitForm = (event) => {
+        event.preventDefault();
+        handleClose();
+        const task = {
+            taskTitle: event.target.taskTitle.value,
+            taskDescription: event.target.taskDescription.value,
+            taskAssignedUserId: taskAssignedUserId
+        }
+        createNewTask(task);
+    }
+
     return (
         <Dialog
             open={open}
@@ -183,7 +201,7 @@ const CreateNewTaskDialog = ({ open, handleClose, createNewTask }) => {
             fullWidth>
             <DialogTitle><b>Create New Task</b></DialogTitle>
             <DialogContent>
-                <form onSubmit={createNewTask} className='d-flex flex-column'>
+                <form onSubmit={submitForm} className='d-flex flex-column'>
                     <div className='mt-4'>
                         <TextField
                             id="taskTitle"
@@ -201,6 +219,29 @@ const CreateNewTaskDialog = ({ open, handleClose, createNewTask }) => {
                             multiline
                             rows={4}
                         />
+                    </div>
+                    <div className='mt-4'>
+                        <FormControl fullWidth >
+                            <InputLabel id="taskAssignedUser">Task Assigned User</InputLabel>
+                            <Select
+                                labelId="taskAssignedUser"
+                                id="taskAssignedUser"
+                                value={taskAssignedUserId}
+                                label="Task Assigned User"
+                                onChange={(event) => setTaskAssignedUserId(event.target.value)}>
+                                {
+                                    usersAssignedProjectList.map(user => {
+                                        return (
+                                            <MenuItem
+                                                key={user.userId}
+                                                value={user.userId}>
+                                                {`#${user.userId} ${user.name}`}
+                                            </MenuItem>
+                                        )
+                                    })
+                                }
+                            </Select>
+                        </FormControl>
                     </div>
                     <div className='mt-4 d-flex justify-content-center'>
                         <Button

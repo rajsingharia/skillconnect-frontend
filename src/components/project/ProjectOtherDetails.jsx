@@ -30,7 +30,7 @@ export default function ProjectOtherDetails({ project, setRefresh }) {
     }
 
     const handelSearchName = (name) => {
-        // delay for 1 sec
+        // delay for 300ms
         setsearchName(name);
         setTimeout(() => {
             if (name.length > 0) {
@@ -114,7 +114,7 @@ export default function ProjectOtherDetails({ project, setRefresh }) {
                             {
 
                                 project?.usersAssignedProjectList?.map((user) => {
-                                    return <Grid item>
+                                    return <Grid key={user.userId} item>
                                         <div className='d-flex justify-content-center align-items-center mb-3'>
                                             <Tooltip title={user?.name} placement="top">
                                                 <Avatar

@@ -156,9 +156,9 @@ export default function UserData({ userData, updateUserData }) {
                                                 />
                                             </FormControl>
                                             :
-                                            <h7 style={{ 'color': 'gray', 'marginLeft': '5px' }}>
+                                            <h6 style={{ 'color': 'gray', 'marginLeft': '5px' }}>
                                                 Skills List
-                                            </h7>
+                                            </h6>
                                     }
                                     {
                                         isEditable &&

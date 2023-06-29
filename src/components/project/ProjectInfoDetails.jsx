@@ -1,5 +1,5 @@
 
-import { Alert, Box, Card, CardContent, CardHeader, Chip, Container, Grid } from '@mui/material';
+import { Alert, Box, Card, CardContent, CardHeader, Chip, Container, Grid, Typography } from '@mui/material';
 import Text from '@mui/material/Typography';
 import React from 'react'
 import { TimeStampToDate } from '../../utils/Helper';
@@ -32,21 +32,16 @@ export default function ProjectInfoDetails({ isLoading, error, project, taskList
                         <CardContent>
 
                             <div >
-
                                 <div className='d-flex justify-content-between'>
-
                                     <h5 className="card-title">{project?.projectName}</h5>
                                     <h5
                                         className="card-title"
                                         style={{ 'color': project?.isFinished ? 'red' : 'green', 'fontFamily': 'monospace', 'fontSize': '1rem', 'fontWeight': 'bold', 'letterSpacing': '1px' }}>
                                         {project?.isFinished ? " (Finished)" : " (Ongoing)"}
                                     </h5>
-
                                 </div>
 
-                                <p className="card-text">{
-                                    project?.projectDetails
-                                }</p>
+                                <p className="card-text">{project?.projectDetails}</p>
                                 <b>Start Date: </b>
                                 <Text component="span" variant="body2" color="text.primary" >
                                     {TimeStampToDate(project?.startDate)}
@@ -59,9 +54,13 @@ export default function ProjectInfoDetails({ isLoading, error, project, taskList
 
 
 
-                            <Text className='d-flex flex-row justify-content-start align-items-center mt-4'>
-                                Department: <Chip className='ml-3' label={project?.department?.departmentName} color='success' />
-                            </Text>
+                            <div className='d-flex flex-row justify-content-start align-items-center mt-4'>
+                                <b>Department: </b>
+                                <Chip
+                                    className='ml-3'
+                                    label={project?.department?.departmentName}
+                                    color='success' />
+                            </div>
                         </CardContent>
                     </Card>
                 </motion.div>

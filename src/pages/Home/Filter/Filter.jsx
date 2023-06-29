@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react'
-import { getAuthApi } from '../../../utils/axiosConfig';
-import { Alert, Button, FormControl, IconButton, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { getApi, getAuthApi } from '../../../utils/axiosConfig';
+import { Alert, Button, Chip, FormControl, IconButton, InputLabel, ListItem, MenuItem, Select, TextField } from '@mui/material';
 import Spinner from '../../../components/general/spinner/Spinner';
 import { motion } from 'framer-motion';
 
@@ -9,15 +9,16 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 export default function Filter({ filter, setFilter }) {
 
-  console.log(filter);
-
   const authApi = getAuthApi();
+  const api = getApi();
 
 
   const [department, setDepartment] = useState(filter.departmentId);
   const [priority, setPriority] = useState(filter.priority);
   const [skill, setSkill] = useState(filter.skill);
   const [sort, setSort] = useState(filter.sort);
+
+  const [skillSuggestions, setSkillSuggestions] = useState([]);
 
 
   const [error, setError] = useState('');
@@ -55,7 +56,32 @@ export default function Filter({ filter, setFilter }) {
 
     fetchDepartmentList();
 
-  }, [])
+  }, []);
+
+
+  useEffect(() => {
+
+    const getSkillSuggestions = async () => {
+
+      const skillName = skill == '' ? null : skill;
+
+      api.get(`api/v1/skill/search/${skillName}`)
+        .then(function (response) {
+          console.log(response.data);
+          setSkillSuggestions(response.data);
+        })
+        .catch(function (error) {
+          if (error.response && error.response.status == 403) {
+            handleNavigateToLogin();
+            return;
+          }
+          setError(error.response.data.message);
+        });
+    }
+
+    getSkillSuggestions();
+
+  }, [skill])
 
   const handleDepartmentChange = (event) => {
     setDepartment(event.target.value);
@@ -72,6 +98,11 @@ export default function Filter({ filter, setFilter }) {
 
   const setFilterVariable = (filter) => {
     setFilter(filter);
+  }
+
+  const handleSkillSuggestionsClick = (skill) => {
+    setSkill(skill.skillName);
+    setSkillSuggestions([]);
   }
 
   const applyFilter = () => {
@@ -177,6 +208,26 @@ export default function Filter({ filter, setFilter }) {
               fullWidth
               value={skill}
               onChange={(e) => { setSkill(e.target.value) }} />
+            {
+              skillSuggestions.length > 0 &&
+              <div className='mt-1'>Suggestions:</div>
+            }
+            {
+              skillSuggestions.length > 0 &&
+              <div className="d-flex flex-row mt-1" style={{ 'maxWidth': '100%', 'flexFlow': 'row wrap', 'backgroundColor': 'lightGray' }}>
+                {
+                  skillSuggestions.map((skill) => (
+                    <ListItem key={skill.skillId} style={{ 'width': 'fit-content' }}>
+                      <Chip
+                        label={skill.skillName}
+                        color="success"
+                        onClick={() => handleSkillSuggestionsClick(skill)}
+                      />
+                    </ListItem>
+                  ))
+                }
+              </div>
+            }
           </div>
 
           <div className="mb-4">

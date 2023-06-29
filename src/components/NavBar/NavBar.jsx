@@ -14,8 +14,8 @@ export default function NavBar() {
                 </Link>
             </div>
             <ul>
-                <NavItem to="/">Home</NavItem>
-                <NavItem to="/projects">Projects</NavItem>
+                <NavItem to="/posts">Posts</NavItem>
+                <NavItem to="/">Projects</NavItem>
                 <NavItem to="saved-posts">Saved Posts</NavItem>
             </ul>
             <NavItemMyAccount />
