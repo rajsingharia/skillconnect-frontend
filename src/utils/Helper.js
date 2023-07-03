@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const TimesAgo = (d) => {
+const TimesAgo = (d, isShortText = false) => {
     const date = new Date(d);
     const now = new Date();
     const diff = now.getTime() - date.getTime();
@@ -11,15 +11,27 @@ const TimesAgo = (d) => {
     const days = Math.floor(hours / 24);
     
     if (days > 0) {
+        if (isShortText) {
+            return `${days}d`;
+        }
         return `${days} days ago`;
     }
     if (hours > 0) {
+        if (isShortText) {
+            return `${hours}h`;
+        }
         return `${hours} hours ago`;
     }
     if (minutes > 0) {
+        if (isShortText) {
+            return `${minutes}m`;
+        }
         return `${minutes} minutes ago`;
     }
     if (seconds > 0) {
+        if (isShortText) {
+            return `${seconds}s`;
+        }
         return `${seconds} seconds ago`;
     }
     return 'Just now';

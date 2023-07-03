@@ -1,14 +1,18 @@
 
 import React, { useEffect, useState } from 'react'
 import { getApi } from '../../utils/axiosConfig';
-import { Alert, Avatar, Button, Card, CardContent, Chip, FormGroup, IconButton, TextField, Typography, Badge, Tooltip } from '@mui/material';
-import Text from '@mui/material/Typography';
-import { TimeStampToDate } from '../../utils/Helper';
+import { Alert, Avatar, Card, CardContent, IconButton, TextField, Typography, Tooltip } from '@mui/material';
+import { TimesAgo } from '../../utils/Helper';
 import SendIcon from '@mui/icons-material/Send';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import UserDetailsDialog from '../UserDetailDialog/UserDetailsDialog';
 import './PostMessagesList.css'
 import { motion } from 'framer-motion';
+import { over } from 'stompjs';
+import SockJs from "sockjs-client/dist/sockjs";
+import { process } from 'dotenv';
+
+var stompClient = null;
 
 export default function PostMessagesList({ postId }) {
 
@@ -27,24 +31,74 @@ export default function PostMessagesList({ postId }) {
         setUserDetailDialogOpen(true);
     };
 
+    const [isConnected, setIsConnected] = useState(false);
+
+    let onConnected = () => {
+        console.log("Connected!!")
+        setIsConnected(true);
+        stompClient.subscribe(`/post-chatroom/${postId}`, onMessageReceived);
+    }
+
+    let onDisconnected = () => {
+        console.log("Disconnected!!")
+        setIsConnected(false);
+    }
+
+    let onError = (err) => {
+        console.log(err);
+    }
+
+    let onMessageReceived = (payload) => {
+        let newMessage = JSON.parse(payload.body);
+        console.log("New Message Received");
+        console.log(newMessage);
+        setMessageList((messageList) => [newMessage, ...messageList]);
+    }
+
     useEffect(() => {
 
+        const headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Headers': '*',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+
+        const connectToSocket = () => {
+
+            //get url from env
+            const REACT_BACK_END_APP_BASE_URL = 'http://localhost:8080' || import.meta.env.VITE_BACK_END_APP_BASE_URL;
+            let socket = new SockJs(`${REACT_BACK_END_APP_BASE_URL}/ws`);
+            stompClient = over(socket);
+
+            stompClient.connect(headers, onConnected, onError);
+        }
+
+        const disconnectFromSocket = () => {
+            if (stompClient !== null) {
+                stompClient.disconnect(onDisconnected, headers);
+            }
+        }
+
+        connectToSocket();
+
+        return () => {
+            disconnectFromSocket();
+        }
+    }, []);
+
+    useEffect(() => {
         const fetchPostMessageData = async () => {
-
             setIsLoading(true);
-
-            //Message List for this post
-
             api.get(`api/v1/message/${postId}`)
                 .then((response) => {
                     const messageList = response.data;
                     console.log(messageList);
-
                     //For testing add same message 10 times
                     // for (let i = 0; i < 10; i++) {
                     //     messageList.push(messageList[0]);
                     // }
-
                     setMessageList(messageList);
                 })
                 .catch((error) => {
@@ -59,10 +113,10 @@ export default function PostMessagesList({ postId }) {
                         setIsLoading(false);
                     }, 1000);
                 });
-
         }
 
         fetchPostMessageData();
+
 
     }, [refresh]);
 
@@ -81,20 +135,19 @@ export default function PostMessagesList({ postId }) {
         console.log(message);
 
         api.post(`api/v1/message/${postId}`, message)
-            .then(function (response) {
-                console.log(response);
-                setRefresh(true);
+            .then(() => {
+                console.log("Message Sent");
             })
-            .catch(function (error) {
+            .catch((error) => {
                 if (error.response && error.response.status == 403) {
                     handleNavigateToLogin();
                     return;
                 }
                 setError(error.response.data.message);
-                event.target.message.value = '';
             })
-            .finally(function () {
+            .finally(() => {
                 setIsLoading(false);
+                event.target.message.value = '';
             });
 
     }
@@ -128,7 +181,14 @@ export default function PostMessagesList({ postId }) {
                 </div>
             }
             {
-                !isLoading && !error &&
+                !isLoading && !error && !isConnected &&
+                <div className='d-flex justify-content-center align-items-center w-100 h-100'
+                    style={{ 'backgroundColor': 'gray', 'borderRadius': '8px' }}>
+                    <Alert severity="info" >Connecting to server</Alert>
+                </div>
+            }
+            {
+                !isLoading && !error && isConnected &&
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -144,7 +204,8 @@ export default function PostMessagesList({ postId }) {
                                             <Card
                                                 sx={{ minWidth: '30%', 'maxWidth': '60%', 'padding': '8px 12px', 'marginBottom': '8px' }}>
                                                 <div className='d-flex flex-row align-items-center'>
-                                                    <Tooltip title={message?.sender?.name}>
+                                                    <Tooltip
+                                                        title={`#SSDS ${message?.sender?.userId} ${message?.sender?.name}`}>
                                                         <Avatar
                                                             onClick={() => handleUserDetailDialogOpen(message.sender)}
                                                             style={{ 'cursor': 'pointer' }}
@@ -152,10 +213,13 @@ export default function PostMessagesList({ postId }) {
                                                             {message?.sender?.name[0].toUpperCase() ?? '?'}
                                                         </Avatar>
                                                     </Tooltip>
-                                                    <h6
-                                                        fontFamily={'Monospace'}>
-                                                        {message.message}
-                                                    </h6>
+                                                    <div className='d-flex flex-column'>
+                                                        <h6
+                                                            fontFamily={'Monospace'}>
+                                                            <b>{message.message}</b>
+                                                        </h6>
+                                                        <h6>{TimesAgo(message.createdOn, true)}</h6>
+                                                    </div>
                                                 </div>
                                             </Card>
                                         </div>

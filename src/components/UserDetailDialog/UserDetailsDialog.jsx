@@ -13,6 +13,10 @@ export default function UserDetailsDialog({ open, handleToClose, user }) {
       </DialogTitle>
       <div className='p-3 d-flex flex-column justify-content-center align-items-center'>
         <p style={{ 'textAlign': 'center' }}>
+          <b>UserId: </b>
+          {`#SSDS ${user?.name}`}
+        </p>
+        <p style={{ 'textAlign': 'center' }}>
           <b>Name: </b>
           {user?.name}
         </p>

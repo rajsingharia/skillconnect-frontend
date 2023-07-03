@@ -116,7 +116,7 @@ export default function ProjectOtherDetails({ project, setRefresh }) {
                                 project?.usersAssignedProjectList?.map((user) => {
                                     return <Grid key={user.userId} item>
                                         <div className='d-flex justify-content-center align-items-center mb-3'>
-                                            <Tooltip title={user?.name} placement="top">
+                                            <Tooltip title={`#SSDS ${user?.userId}`} placement="top">
                                                 <Avatar
                                                     onClick={() => handleUserDetailDialogOpen(user)}
                                                     className='mr-3'

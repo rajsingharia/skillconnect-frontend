@@ -160,6 +160,8 @@ const TaskDetailAndStatusChangeDialog = ({ task, open, handleClose, status, setS
         setStatus(event.target.value);
     };
 
+    const initialStatus = task.taskStatus;
+
     return (
         <Dialog
             open={open}
@@ -191,13 +193,29 @@ const TaskDetailAndStatusChangeDialog = ({ task, open, handleClose, status, setS
                             value={status}
                             label="Status"
                             onChange={handleStatusChange}>
-                            <MenuItem value="PENDING">PENDING</MenuItem>
-                            <MenuItem value="IN_PROGRESS">IN PROGRESS</MenuItem>
-                            <MenuItem value="COMPLETED">COMPLETED</MenuItem>
+                            <MenuItem
+                                disabled={initialStatus == 'PENDING'}
+                                value="PENDING">
+                                PENDING
+                            </MenuItem>
+                            <MenuItem
+                                disabled={initialStatus == 'IN_PROGRESS'}
+                                value="IN_PROGRESS">
+                                IN PROGRESS
+                            </MenuItem>
+                            <MenuItem
+                                disabled={initialStatus == 'COMPLETED'}
+                                value="COMPLETED">
+                                COMPLETED
+                            </MenuItem>
                         </Select>
                         {
                             status != task.taskStatus &&
-                            <Button variant="contained" color='success' onClick={handelUpdateStatus} className='mt-3'>
+                            <Button
+                                variant="contained"
+                                color='success'
+                                onClick={handelUpdateStatus}
+                                className='mt-3'>
                                 Change Status
                             </Button>
                         }

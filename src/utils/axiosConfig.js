@@ -1,9 +1,10 @@
-
 import axios from 'axios';
+
+const REACT_BACK_END_APP_BASE_URL = 'http://localhost:8080' || import.meta.env.VITE_BACK_END_APP_BASE_URL;
 
 const getAuthApi = () => {
     return axios.create({
-        baseURL: 'http://localhost:8080',
+        baseURL: REACT_BACK_END_APP_BASE_URL,
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
@@ -16,8 +17,9 @@ const getAuthApi = () => {
 
 const getApi = () => {
     const token = localStorage.getItem('token');
+
     return axios.create({
-        baseURL: 'http://localhost:8080',
+        baseURL: REACT_BACK_END_APP_BASE_URL,
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',

@@ -165,8 +165,11 @@ export default function PostInfoDetails({ isLoading, error, post }) {
                                     gap={1}>
                                     {
                                         post?.listOfSkillsRequired && post?.listOfSkillsRequired?.map((skill) => {
-                                            return <Grid key={skill.skillId}>
-                                                <Chip label={skill.skillName} color='success' />
+                                            return <Grid
+                                                key={skill.skillId}>
+                                                <Chip
+                                                    label={skill.skillName}
+                                                    color='success' />
                                             </Grid>
                                         })
                                     }
@@ -174,8 +177,13 @@ export default function PostInfoDetails({ isLoading, error, post }) {
                             </div>
                             {
                                 post?.isOpen && !isInProject() && !hasAppliedBefore() &&
-                                <div className='mt-2'>
-                                    <Button variant="contained" color="success" size='large' onClick={applyToPost}>
+                                <div className='mt-4'>
+                                    <Button
+                                        variant="contained"
+                                        color="success"
+                                        size='large'
+                                        onClick={applyToPost}
+                                        fullWidth>
                                         Apply
                                     </Button>
                                 </div>

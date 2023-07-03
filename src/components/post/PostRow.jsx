@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom'
 import './postRow.css'
 import { TimesAgo, TimeStampToDate } from '../../utils/Helper';
@@ -9,9 +8,9 @@ import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import Grid from '@mui/material/Grid';
 import Chip from '@mui/material/Chip';
 import Text from '@mui/material/Typography';
-import { Button, IconButton } from '@mui/material';
+import { Button } from '@mui/material';
 
-export default function PostRow({ post, saveOrUnsavePost}) {
+export default function PostRow({ post, saveOrUnsavePost }) {
 
 
     const navigate = useNavigate();
@@ -44,7 +43,7 @@ export default function PostRow({ post, saveOrUnsavePost}) {
         <div className="post-card" >
 
             <div className='d-flex justify-content-between'>
-                <div className='post-card-header' style={{'padding':'10px'}} onClick={navigateToPostDetails}>
+                <div className='post-card-header' style={{ 'padding': '10px' }} onClick={navigateToPostDetails}>
                     <h5 className="card-title">{post.postTitle}</h5>
                     <h6 className="card-subtitle"
                         style={{ 'color': 'grey', 'fontWeight': '400' }}>● {TimesAgo(post.createdOn)}
@@ -53,13 +52,13 @@ export default function PostRow({ post, saveOrUnsavePost}) {
                 <div >
                     <Button aria-label="save" size="large" variant="outlined" color='success' onClick={() => { saveOrUnsavePost(post.postId) }}>
                         {
-                            post.isSaved ? <BookmarkIcon color='success' /> : <BookmarkBorderIcon color='success'/>
+                            post.isSaved ? <BookmarkIcon color='success' /> : <BookmarkBorderIcon color='success' />
                         }
                     </Button>
                 </div>
             </div>
-            <div style={{'padding':'0px 10px 10px 10px', 'cursor':'pointer'}} onClick={navigateToPostDetails}>
-                <p className="card-text">{ minimizeText(post.postDescription) }</p>
+            <div style={{ 'padding': '0px 10px 10px 10px', 'cursor': 'pointer' }} onClick={navigateToPostDetails}>
+                <p className="card-text">{minimizeText(post.postDescription)}</p>
                 <div className='d-flex justify-content-between'>
                     <div className='d-flex flex-column'>
                         <p className="card-text">
@@ -96,7 +95,7 @@ export default function PostRow({ post, saveOrUnsavePost}) {
             </div>
 
 
-            <div style={{'padding':'0px 10px 10px 10px'}}>
+            <div style={{ 'padding': '0px 10px 10px 10px' }}>
                 <Grid container
                     direction="row"
                     justifyContent="flex-start"
@@ -105,7 +104,10 @@ export default function PostRow({ post, saveOrUnsavePost}) {
                     {
                         post.listOfSkillsRequired && post.listOfSkillsRequired.map((skill) => {
                             return <Grid >
-                                <Chip key={skill.skillId} label={skill.skillName} color='success' />
+                                <Chip
+                                    key={skill.skillId}
+                                    label={skill.skillName}
+                                    color='success' />
                             </Grid>
                         })
                     }
