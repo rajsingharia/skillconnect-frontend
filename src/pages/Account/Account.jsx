@@ -90,13 +90,11 @@ export default function Account() {
       }
       {
         !isLoading && !error && userData &&
-        <motion.div 
-
-          initial={{ opacity: 0, y: 20 }}
+        <motion.div
+          initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          
-        className='d-flex justify-content-center'>
+          delay={{ duration: 0.5, delay: 0.5 }}
+          className='d-flex justify-content-center'>
           <UserData userData={userData} updateUserData={updateUserData} />
         </motion.div>
       }

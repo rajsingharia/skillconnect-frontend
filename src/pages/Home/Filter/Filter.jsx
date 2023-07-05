@@ -240,8 +240,8 @@ export default function Filter({ filter, setFilter }) {
                 value={sort}
                 label="Sort By Created Date"
                 onChange={handleChangeSort}>
-                <MenuItem value={0}>Ascending</MenuItem>
-                <MenuItem value={1}>Descending</MenuItem>
+                <MenuItem value={0}>Descending</MenuItem>
+                <MenuItem value={1}>Ascending</MenuItem>
               </Select>
             </FormControl>
           </div>

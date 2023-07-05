@@ -1,19 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { getApi, getAuthApi } from '../../utils/axiosConfig';
 import CreateProjectForm from '../../components/project/CreateProjectForm';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Button from '@mui/material/Button';
 import CustomButtonGroup from '../../components/general/buttonGroup/CustomButtonGroup';
 import { IoAddCircleOutline } from "react-icons/io5"
-import { Alert } from '@mui/material';
-import ProjectRow from '../../components/project/ProjectRow';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Alert, Slide, Pagination } from '@mui/material'
 import Spinner from '../../components/general/spinner/Spinner';
 import ListOfProject from './ListOfProject/ListOfProject';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="left" ref={ref} {...props} />;
+});
 
 
 export default function MyProjects() {
@@ -23,14 +20,18 @@ export default function MyProjects() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+
   const [userProjects, setUserProjects] = useState([]);
   const [projectType, setProjectType] = useState('user');
   const [projectTypeToggleState, setProjectTypeToggleState] = useState('My');
   const [open, setOpen] = useState(false);
   const [projectCreated, setProjectCreated] = useState(false);
   const [departmentList, setDepartmentList] = useState([]);
+  const [pageNumber, setPageNumber] = useState(0);
+  const [totalNumberOfPages, setTotalNumberOfPages] = useState(0);
 
   const navigate = useNavigate();
+
 
   const handleClickToOpen = () => {
     setOpen(true);
@@ -45,32 +46,9 @@ export default function MyProjects() {
     navigate('/login', { replace: true, state: { alert: 'You need to login first' } });
   }
 
-
   useEffect(() => {
 
-    const fetchUserProjects = async () => {
-
-      setIsLoading(true);
-
-      api.get(`api/v1/project/${projectType}`)
-        .then(function (response) {
-          console.log(response.data);
-          setUserProjects(response.data);
-        })
-        .catch(function (error) {
-          if (error.response && error.response.status == 403) {
-            handleNavigateToLogin()
-            return;
-          }
-          setError(error.response.data.message);
-        })
-        .finally(function () {
-          setTimeout(() => {
-            setIsLoading(false);
-          }, 1000);
-          // setIsLoading(false);
-        });
-
+    const fetchAllDepartment = async () => {
       authApi.get('api/v1/department/get-all')
         .then(function (response) {
           setDepartmentList(response.data);
@@ -82,19 +60,56 @@ export default function MyProjects() {
           }
           setError(error.response.data.message);
         });
-
     }
 
-    fetchUserProjects();
+    fetchAllDepartment();
 
-  }, [projectType, projectCreated]);
+  }, []);
+
+
+  // useEffect(() => {
+
+  //   const fetchUserProjects = async () => {
+  //     setIsLoading(true);
+
+  //     const pageNumberParam = {
+  //       params: {
+  //         pageNumber: pageNumber
+  //       }
+  //     }
+
+  //     api.get(`api/v1/project/${projectType}`, pageNumberParam)
+  //       .then(function (response) {
+  //         console.log(response.data);
+  //         setUserProjects(response.data);
+  //       })
+  //       .catch(function (error) {
+  //         if (error.response && error.response.status == 403) {
+  //           handleNavigateToLogin()
+  //           return;
+  //         }
+  //         setError(error.response.data.message);
+  //       })
+  //       .finally(function () {
+  //         setTimeout(() => {
+  //           setIsLoading(false);
+  //         }, 1000);
+  //         // setIsLoading(false);
+  //       });
+  //   }
+
+  //   fetchUserProjects();
+
+  // }, [projectType, projectCreated, pageNumber]);
 
   const changeProjectToggle = (event) => {
     setProjectTypeToggleState(event.target.name);
     if (event.target.name === 'My') {
       setProjectType('user')
+      setPageNumber(0);
     } else if (event.target.name === 'All') {
       setProjectType('all');
+      setPageNumber(0);
     }
   };
 
@@ -102,7 +117,7 @@ export default function MyProjects() {
   return (
     <>
       {
-        !error &&
+        !error && !isLoading &&
         <div className="d-flex justify-content-between mb-3">
           <CustomButtonGroup
             buttons={["My", "All"]}
@@ -122,7 +137,7 @@ export default function MyProjects() {
         </div >
       }
 
-      {
+      {/* {
         isLoading &&
         <div className='d-flex justify-content-center'>
           <div className='loading-body'>
@@ -130,7 +145,7 @@ export default function MyProjects() {
             <Spinner />
           </div>
         </div>
-      }
+      } */}
 
       {
         error &&
@@ -140,12 +155,24 @@ export default function MyProjects() {
       }
       {
         !isLoading && !error &&
-        <ListOfProject userProjects={userProjects} />
+        <ListOfProject 
+          projectType={projectType}
+          projectCreated={projectCreated}
+          pageNumber={pageNumber}
+          handleNavigateToLogin={handleNavigateToLogin}
+          setTotalNumberOfPages={setTotalNumberOfPages}
+        />
       }
       {
-
+        !isLoading && !error && totalNumberOfPages > 0 &&
+        <Pagination
+          count={totalNumberOfPages}
+          variant="outlined"
+          shape="rounded"
+          color='success'
+          className='d-flex justify-content-end'
+          onChange={(event, page) => setPageNumber(page - 1)} />
       }
-
       {
         !isLoading && !error &&
         <CreateProjectDialog
@@ -176,7 +203,8 @@ function CreateProjectDialog({
         open={open}
         onClose={handleToClose}
         fullWidth={true}
-        maxWidth='lg'>
+        maxWidth='lg'
+        TransitionComponent={Transition}>
         <DialogTitle>Create New Project</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -189,8 +217,9 @@ function CreateProjectDialog({
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleToClose}
-            color="primary" autoFocus>
+          <Button
+            onClick={handleToClose}
+            color="success">
             Close
           </Button>
         </DialogActions>

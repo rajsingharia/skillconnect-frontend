@@ -10,7 +10,7 @@ import './PostMessagesList.css'
 import { motion } from 'framer-motion';
 import { over } from 'stompjs';
 import SockJs from "sockjs-client/dist/sockjs";
-import { process } from 'dotenv';
+import { useNavigate } from 'react-router-dom';
 
 var stompClient = null;
 
@@ -22,16 +22,19 @@ export default function PostMessagesList({ postId }) {
     const [error, setError] = useState('');
     const [messageList, setMessageList] = useState([]);
     const [refresh, setRefresh] = useState(false);
-
     const [userDetailDialogOpen, setUserDetailDialogOpen] = useState(false);
     const [userDetailUser, setUserDetailsUser] = useState({});
+    const [isConnected, setIsConnected] = useState(false);
+    const navigate = useNavigate();
 
     const handleUserDetailDialogOpen = (user) => {
         setUserDetailsUser(user);
         setUserDetailDialogOpen(true);
     };
 
-    const [isConnected, setIsConnected] = useState(false);
+    const handleNavigateToLogin = () => {
+        navigate('/login', { replace: true, state: { alert: 'You need to login first' } });
+    }
 
     let onConnected = () => {
         console.log("Connected!!")
@@ -46,6 +49,8 @@ export default function PostMessagesList({ postId }) {
 
     let onError = (err) => {
         console.log(err);
+        setIsConnected(false);
+        setError("Error while connecting to server");
     }
 
     let onMessageReceived = (payload) => {

@@ -66,7 +66,8 @@ export default function SavedPosts() {
 
             }
             {
-                !loading && !error && savedPosts.length === 0 && <Alert severity="info">No saved posts</Alert>
+                !loading && !error && savedPosts.length === 0 &&
+                <Alert severity="info">No saved posts</Alert>
             }
             {
                 !loading && !error && savedPosts.length > 0 &&
@@ -76,13 +77,15 @@ export default function SavedPosts() {
                             <Grid container spacing={2}>
                                 {
                                     savedPosts?.map((post, idx) => {
-                                        return < Grid item xs={6}>
+                                        return < Grid
+                                            item xs={6}>
                                             <motion.div
                                                 key={post.postId}
-                                                initial={{ opacity: 0, y: 20 }}
+                                                initial={{ opacity: 0, y: 50 }}
                                                 animate={{ opacity: 1, y: 0 }}
                                                 transition={{ delay: 0.2 * idx }}>
-                                                <SavedPostCard post={post} />
+                                                <SavedPostCard
+                                                    post={post} />
                                             </motion.div>
                                         </Grid>
 

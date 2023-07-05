@@ -1,4 +1,4 @@
-import { Checkbox, FormControl, InputLabel, ListItemText, MenuItem, OutlinedInput, Select } from "@mui/material";
+import { Button, Checkbox, FormControl, InputLabel, ListItemText, MenuItem, OutlinedInput, Select } from "@mui/material";
 import { getApi } from "../../utils/axiosConfig";
 
 import React, { useEffect } from 'react'
@@ -48,6 +48,7 @@ export default function CreateProjectForm({
         } else {
             api.get(`api/v1/user/get-all-users/${department}`)
                 .then(function (response) {
+                    console.log('potential users');
                     console.log(response.data);
                     setPotentialUsers(response.data);
                 })
@@ -105,11 +106,18 @@ export default function CreateProjectForm({
             <div className='d-flex flex-row justify-content-between'>
                 <div className='d-flex flex-column w-100 mr-3'>
                     <div className="mb-3">
-                        <label htmlFor="projectName" className="form-label">Project Name</label>
-                        <input type="text" className="form-control" id="projectName" />
+                        <label
+                            htmlFor="projectName"
+                            className="form-label">Project Name</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            id="projectName" />
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="projectDescription" className="form-label">Project Description</label>
+                        <label
+                            htmlFor="projectDescription"
+                            className="form-label">Project Description</label>
                         <textarea
                             className="form-control"
                             id="projectDescription"
@@ -117,15 +125,22 @@ export default function CreateProjectForm({
                         />
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="startDate" className="form-label">Start Date</label>
+                        <label
+                            htmlFor="startDate"
+                            className="form-label">Start Date</label>
                         <input
                             type="date"
                             className="form-control"
                             id="startDate" />
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="endDate" className="form-label">End Date</label>
-                        <input type="date" className="form-control" id="endDate" />
+                        <label
+                            htmlFor="endDate"
+                            className="form-label">End Date</label>
+                        <input
+                            type="date"
+                            className="form-control"
+                            id="endDate" />
                     </div>
                     <div className="mb-3">
                         <FormControl sx={{ m: 1, width: 300 }}>
@@ -137,7 +152,9 @@ export default function CreateProjectForm({
                                 onChange={handleDepartmentChange}>
                                 {
                                     departmentList.map((department) => (
-                                        <MenuItem key={department.departmentId} value={department.departmentId}>
+                                        <MenuItem
+                                            key={department.departmentId}
+                                            value={department.departmentId}>
                                             {department.departmentName}
                                         </MenuItem>
                                     ))
@@ -145,7 +162,12 @@ export default function CreateProjectForm({
                             </Select>
                         </FormControl>
                     </div>
-                    <button type="submit" className="btn btn-primary">Create</button>
+                    <Button
+                        variant="contained"
+                        type="submit"
+                        color="success">
+                        Create
+                    </Button>
                 </div>
                 <div className="mb-3">
                     <FormControl sx={{ m: 1, width: 300 }}>
@@ -156,13 +178,18 @@ export default function CreateProjectForm({
                             value={userIdsAssignedProjectList}
                             onChange={handleChange}
                             input={<OutlinedInput label=' Users Assigned Project List' />}
-                            renderValue={(selected) => selected.join(', ')}
+                            renderValue={(selected) => selected.join( ', ')}
                             MenuProps={MenuProps}>
                             {
                                 potentialUsers.map((user) => (
-                                    <MenuItem key={user.userId} value={user.userId}>
-                                        <Checkbox checked={userIdsAssignedProjectList.indexOf(user.userId) > -1} />
-                                        <ListItemText secondary={user.name} primary={`User id: ${user.userId}`} />
+                                    <MenuItem
+                                        key={user.userId}
+                                        value={user.name}>
+                                        <Checkbox
+                                            checked={userIdsAssignedProjectList.indexOf(user.name) > -1} />
+                                        <ListItemText
+                                            secondary={user.name}
+                                            primary={`SSDS ${user.userId}`} />
                                     </MenuItem>
                                 ))
                             }

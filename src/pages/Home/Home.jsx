@@ -6,14 +6,12 @@ import Filter from './Filter/Filter'
 import ListOfPost from './ListOfPost/ListOfPost'
 import { IoAddCircleOutline } from "react-icons/io5"
 import CreatePostForm from '../../components/post/CreatePostForm'
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Button from '@mui/material/Button';
-import Alert from '@mui/material/Alert';
 import Spinner from '../../components/general/spinner/Spinner'
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Alert, Slide, Pagination } from '@mui/material'
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 
 export default function Home() {
@@ -26,6 +24,8 @@ export default function Home() {
   const [open, setOpen] = useState(false);
   const [postCreated, setPostCreated] = useState(false);
   const [postSaved, setPostSaved] = useState();
+  const [pageNumber, setPageNumber] = useState(0);
+  const [totalNumberOfPages, setTotalNumberOfPages] = useState(0);
 
 
   //filter state
@@ -57,8 +57,6 @@ export default function Home() {
 
     const postIsSaved = posts.find((post) => post.postId == postId).isSaved;
 
-    
-
     const endPoint = postIsSaved ? `/api/v1/user/un-save-post/${postId}` : `/api/v1/user/save-post/${postId}`;
 
     api.get(endPoint)
@@ -76,39 +74,39 @@ export default function Home() {
 
   }
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    console.log('postSaved', postSaved);
+  //   console.log('postSaved', postSaved);
 
-    const fetchData = async () => {
+  //   const fetchData = async () => {
 
-      setIsLoading(true);
+  //     setIsLoading(true);
 
-      api.get('/api/v1/post/all', {
-        params: filter
-      }).then(function (response) {
-        console.log(response.data);
-        setPosts(response.data);
-      })
-        .catch(function (error) {
-          console.log(error);
-          if (error.response && error.response.status == 403) {
-            handleNavigateToLogin()
-            return;
-          }
-          setError(error.response.data.message);
-        })
-        .finally(function () {
-          setTimeout(() => {
-            setIsLoading(false);
-          }, 1000);
-          // setIsLoading(false);
-        });
-    };
+  //     api.get('/api/v1/post/all', {
+  //       params: filter
+  //     }).then(function (response) {
+  //       console.log(response.data);
+  //       setPosts(response.data);
+  //     })
+  //       .catch(function (error) {
+  //         console.log(error);
+  //         if (error.response && error.response.status == 403) {
+  //           handleNavigateToLogin()
+  //           return;
+  //         }
+  //         setError(error.response.data.message);
+  //       })
+  //       .finally(function () {
+  //         setTimeout(() => {
+  //           setIsLoading(false);
+  //         }, 1000);
+  //         // setIsLoading(false);
+  //       });
+  //   };
 
-    fetchData();
+  //   fetchData();
 
-  }, [filter, postCreated, postSaved]);
+  // }, [filter, postCreated, postSaved, pageNumber]);
 
   return (
     <>
@@ -163,10 +161,28 @@ export default function Home() {
             />
           </div>
           <div className='home-body-right'>
-            <ListOfPost
-              posts={posts}
-              saveOrUnsavePost={saveOrUnsavePost}
-            />
+            {
+              <ListOfPost
+                saveOrUnsavePost={saveOrUnsavePost}
+                posts={posts}
+                setPosts={setPosts}
+                filter={filter}
+                postCreated={postCreated}
+                postSaved={postSaved}
+                pageNumber={pageNumber}
+                handleNavigateToLogin={handleNavigateToLogin}
+                setTotalNumberOfPages={setTotalNumberOfPages}/>
+            }
+            {
+              !isLoading && !error && 
+              <Pagination
+                count={totalNumberOfPages}
+                variant="outlined"
+                shape="rounded"
+                color='success'
+                className='d-flex justify-content-end'
+                onChange={(event, page) => setPageNumber(page - 1)} />
+            }
           </div>
         </div>
       }
@@ -180,7 +196,8 @@ function CreatePostDialog({ open, handleToClose, setPostCreated, setError, handl
       <Dialog
         open={open}
         onClose={handleToClose}
-        fullWidth={true}>
+        fullWidth={true}
+        TransitionComponent={Transition}>
         <DialogTitle>Create New Project</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -193,8 +210,9 @@ function CreatePostDialog({ open, handleToClose, setPostCreated, setError, handl
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleToClose}
-            color="primary" autoFocus>
+          <Button
+            onClick={handleToClose}
+            color="success">
             Close
           </Button>
         </DialogActions>

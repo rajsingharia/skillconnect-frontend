@@ -91,7 +91,7 @@ export default function UserData({ userData, updateUserData }) {
                     </IconButton>
                 </div>
                 <div className='d-flex justify-content-center mb-3'>
-                    <Avatar sx={{ width: 50, height: 50 }} />
+                    <Avatar sx={{ width: 50, height: 50, color: 'white', bgcolor: 'green' }}/>  
                 </div>
                 <form className='w-100' onSubmit={submitForm}>
                     <div className='d-flex justify-content-center mt-3 flex-column' style={{ 'gap': '20px' }}>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { getApi } from '../../utils/axiosConfig';
-import { Alert, Card, CardContent, Typography, Avatar, Grid, IconButton, Button, Dialog, DialogTitle, DialogContent, TextField, Box, Container, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Alert, Card, CardContent, Typography, Avatar, Grid, IconButton, Button, Dialog, DialogTitle, DialogContent, TextField, Box, Container, FormControl, InputLabel, Select, MenuItem, Slide } from '@mui/material';
 import './projectDetails.css';
 import ProjectOtherDetails from '../../components/project/ProjectOtherDetails';
 import ProjectInfoDetails from '../../components/project/ProjectInfoDetails';
@@ -9,6 +9,11 @@ import { Square, Task } from '@mui/icons-material';
 
 import AddToPhotosIcon from '@mui/icons-material/AddToPhotos';
 import Spinner from '../../components/general/spinner/Spinner';
+
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="left" ref={ref} {...props} />;
+  });
 
 
 
@@ -198,7 +203,8 @@ const CreateNewTaskDialog = ({ open, handleClose, createNewTask, usersAssignedPr
         <Dialog
             open={open}
             onClose={handleClose}
-            fullWidth>
+            fullWidth
+            TransitionComponent={Transition}>
             <DialogTitle><b>Create New Task</b></DialogTitle>
             <DialogContent>
                 <form onSubmit={submitForm} className='d-flex flex-column'>
