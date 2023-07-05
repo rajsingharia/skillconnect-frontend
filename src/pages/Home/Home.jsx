@@ -57,6 +57,8 @@ export default function Home() {
 
     const postIsSaved = posts.find((post) => post.postId == postId).isSaved;
 
+    
+
     const endPoint = postIsSaved ? `/api/v1/user/un-save-post/${postId}` : `/api/v1/user/save-post/${postId}`;
 
     api.get(endPoint)
