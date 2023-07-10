@@ -1,17 +1,15 @@
-import React, { createContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { getApi, getAuthApi } from '../../utils/axiosConfig';
 import CreateProjectForm from '../../components/project/CreateProjectForm';
 import CustomButtonGroup from '../../components/general/buttonGroup/CustomButtonGroup';
 import { IoAddCircleOutline } from "react-icons/io5"
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, Alert, Slide, Pagination } from '@mui/material'
-import Spinner from '../../components/general/spinner/Spinner';
 import ListOfProject from './ListOfProject/ListOfProject';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="left" ref={ref} {...props} />;
 });
-
 
 export default function MyProjects() {
 
@@ -65,42 +63,6 @@ export default function MyProjects() {
     fetchAllDepartment();
 
   }, []);
-
-
-  // useEffect(() => {
-
-  //   const fetchUserProjects = async () => {
-  //     setIsLoading(true);
-
-  //     const pageNumberParam = {
-  //       params: {
-  //         pageNumber: pageNumber
-  //       }
-  //     }
-
-  //     api.get(`api/v1/project/${projectType}`, pageNumberParam)
-  //       .then(function (response) {
-  //         console.log(response.data);
-  //         setUserProjects(response.data);
-  //       })
-  //       .catch(function (error) {
-  //         if (error.response && error.response.status == 403) {
-  //           handleNavigateToLogin()
-  //           return;
-  //         }
-  //         setError(error.response.data.message);
-  //       })
-  //       .finally(function () {
-  //         setTimeout(() => {
-  //           setIsLoading(false);
-  //         }, 1000);
-  //         // setIsLoading(false);
-  //       });
-  //   }
-
-  //   fetchUserProjects();
-
-  // }, [projectType, projectCreated, pageNumber]);
 
   const changeProjectToggle = (event) => {
     setProjectTypeToggleState(event.target.name);

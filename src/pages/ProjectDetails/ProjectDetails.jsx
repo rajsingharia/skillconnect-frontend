@@ -39,26 +39,19 @@ export default function ProjectDetails() {
 
 
     const createNewTask = (task) => {
-
-        alert(JSON.stringify(task));
-
-        //event.preventDefault();
-
-
-
-        // api.post(`api/v1/task/${projectId}/add-new-task`, task)
-        //     .then(function (response) {
-        //         console.log(response.data);
-        //         setRefresh(true);
-        //         setOpen(false);
-        //     })
-        //     .catch(function (error) {
-        //         if (error.response && error.response.status == 403) {
-        //             handleNavigateToLogin();
-        //             return;
-        //         }
-        //         setError(error.response.data.message);
-        //     });
+        api.post(`api/v1/task/${projectId}/add-new-task`, task)
+            .then(function (response) {
+                console.log(response.data);
+                setRefresh(true);
+                setOpen(false);
+            })
+            .catch(function (error) {
+                if (error.response && error.response.status == 403) {
+                    handleNavigateToLogin();
+                    return;
+                }
+                setError(error.response.data.message);
+            });
     }
 
     const openNewTaskDialog = () => {
