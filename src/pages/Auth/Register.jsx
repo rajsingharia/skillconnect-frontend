@@ -30,7 +30,7 @@ export default function Register() {
         setDepartment(response.data[0].departmentId);
       })
       .catch(function (error) {
-        setError(error .message);
+        setError(error.message);
       });
   }, []);
 
@@ -112,12 +112,14 @@ export default function Register() {
 
       {error && <Alert severity="error">{error}</Alert>}
 
-      <RegisterForm
-        onFormSubmit={onFormSubmit}
-        navigateToLogin={navigateToLogin}
-        department={department}
-        departmentList={departmentList}
-        handleDepartmentChange={handleDepartmentChange} />
+      <div className='d-flex mt-4 justify-content-center w-100'>
+        <RegisterForm
+          onFormSubmit={onFormSubmit}
+          navigateToLogin={navigateToLogin}
+          department={department}
+          departmentList={departmentList}
+          handleDepartmentChange={handleDepartmentChange} />
+      </div>
 
     </div>
   );

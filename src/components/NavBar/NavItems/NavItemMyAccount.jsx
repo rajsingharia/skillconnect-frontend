@@ -6,15 +6,17 @@ import { Avatar, Tooltip } from '@mui/material';
 
 export default function NavItemMyAccount() {
 
-    const [days, hours, minutes, seconds] = useCountdown(localStorage.getItem('expiryDateTime'));
+    const expiryDateTime = localStorage.getItem('expiryDateTime');
     const userId = localStorage.getItem('userId');
+    const [days, hours, minutes, seconds] = useCountdown(expiryDateTime);
+    
 
     return (
         <div className="my-account">
             <div className='d-flex flex-row align-items-center' >
                 <div >
                     {
-                        localStorage.getItem('token') &&
+                        localStorage.getItem('token') && expiryDateTime && userId && seconds >= 0 &&
                         <h6 >
                             <span className="badge badge-pill badge-dark" style={{ 'marginRight': '10px', 'marginLeft': '10px' }}>
                                 {days}d {hours}h {minutes}m {seconds}s

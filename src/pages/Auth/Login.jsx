@@ -17,7 +17,7 @@ export default function Login() {
   const location = useLocation();
 
   useEffect(() => {
-    if (location.state && location.state.alert){
+    if (location.state && location.state.alert) {
       setError(location.state.alert);
     }
   }, [])
@@ -53,7 +53,7 @@ export default function Login() {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('userId', response.data.userId);
         localStorage.setItem('expiryDateTime', response.data.expiryDateTime);
-        
+
         redirectToHome();
       })
       .catch(function (error) {
@@ -93,7 +93,9 @@ export default function Login() {
 
       {error && <Alert severity="error">{error}</Alert>}
 
-      <LoginForm onFormSubmit={onFormSubmit} navigateToRegister={navigateToRegister} />
+      <div className='d-flex mt-5 pt-5 justify-content-center w-100'>
+        <LoginForm onFormSubmit={onFormSubmit} navigateToRegister={navigateToRegister} />
+      </div>
 
     </div>
   );
