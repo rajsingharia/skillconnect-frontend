@@ -5,7 +5,7 @@
 - Used Axios to connect to backend services
 - Used sockjs-client and stompjs to connect to backend websocket connection
 
-
+# Snapshots of the project
 ![image](https://github.com/rajsingharia/skillconnect-frontend/assets/67454147/ed2fac07-ff9e-40be-a039-be3afe37cca5)
 ![image](https://github.com/rajsingharia/skillconnect-frontend/assets/67454147/956e31b9-f6d6-49e7-9fb8-76dbf15e83f2)
 ![image](https://github.com/rajsingharia/skillconnect-frontend/assets/67454147/37aec029-b4b9-467f-8155-9071a833e586)
